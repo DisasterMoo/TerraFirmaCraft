@@ -253,6 +253,7 @@ public abstract class EntityAnimalTFC extends EntityAnimal implements IAnimalTFC
     @Override
     public EntityAgeable createChild(@Nonnull EntityAgeable other)
     {
+        // Cancel default vanilla behaviour (immediately spawns children of this animal) and set this female as fertilized
         if (this.getGender() == Gender.FEMALE && other instanceof IAnimalTFC)
         {
             this.fertilized = true;
