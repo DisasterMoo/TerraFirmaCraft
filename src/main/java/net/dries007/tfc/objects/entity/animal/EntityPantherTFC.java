@@ -258,8 +258,9 @@ public class EntityPantherTFC extends EntityAnimalMammal implements IMob
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityPantherTFC.AIMeleeAttack());
         this.tasks.addTask(1, new EntityPantherTFC.AIPanic());
+        this.tasks.addTask(2, new EntityAITempt(this, 1.1D, Items.FISH, false));
         this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
-        this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
         this.tasks.addTask(7, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityPantherTFC.AIHurtByTarget());
@@ -270,10 +271,10 @@ public class EntityPantherTFC extends EntityAnimalMammal implements IMob
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(60.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     }
 
     @Override

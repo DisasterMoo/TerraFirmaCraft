@@ -72,6 +72,8 @@ public class ModelOcelotTFC extends ModelBase
         ocelotFrontRightLeg.addBox(-1.0F, 0.0F, 0.0F, 2, 10, 2);
         ocelotFrontRightLeg.setRotationPoint(-1.2F, 13.8F, -5.0F);
     }
+
+    @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
         if (this.isChild) {

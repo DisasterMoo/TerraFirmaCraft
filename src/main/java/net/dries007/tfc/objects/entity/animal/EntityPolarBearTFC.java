@@ -169,7 +169,7 @@ public class EntityPolarBearTFC extends EntityAnimalMammal implements IMob
         }
 
         public boolean shouldExecute() {
-            return !EntityPolarBearTFC.this.isChild() && !EntityPolarBearTFC.this.isBurning() ? false : super.shouldExecute();
+            return !EntityPolarBearTFC.this.isBurning() ? false : super.shouldExecute();
         }
     }
 
@@ -269,6 +269,7 @@ public class EntityPolarBearTFC extends EntityAnimalMammal implements IMob
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityPolarBearTFC.AIMeleeAttack());
         this.tasks.addTask(1, new EntityPolarBearTFC.AIPanic());
+        this.tasks.addTask(2, new EntityAITempt(this, 1.1D, Items.FISH, false));
         this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
         this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
@@ -281,11 +282,11 @@ public class EntityPolarBearTFC extends EntityAnimalMammal implements IMob
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(60.0D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
     }
 
     @Override

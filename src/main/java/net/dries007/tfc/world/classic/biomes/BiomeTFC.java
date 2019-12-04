@@ -44,8 +44,12 @@ public class BiomeTFC extends Biome
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityGoatTFC.class, 10, 4, 4));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityDeerTFC.class, 14, 2, 4));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityPheasantTFC.class, 14, 2, 4));
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntitySaberToothTFC.class, 4, 1, 1));
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityPantherTFC.class, 6, 1, 1));
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityPolarBearTFC.class, 6, 1, 3));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityBearTFC.class, 4, 1, 2));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityRabbitTFC.class, 15, 3, 4));
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityOcelotTFC.class, 6, 2, 3));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityWolfTFC.class, 6, 2, 3));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityHorseTFC.class, 8, 1, 3));
         this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityDonkeyTFC.class, 5, 1, 1));

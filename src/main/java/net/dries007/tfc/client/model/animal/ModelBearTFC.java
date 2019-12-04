@@ -5,6 +5,7 @@
 
 package net.dries007.tfc.client.model.animal;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.client.model.ModelBase;
@@ -15,173 +16,154 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import net.dries007.tfc.objects.entity.animal.EntityBearTFC;
+
 @SideOnly(Side.CLIENT)
 @ParametersAreNonnullByDefault
 public class ModelBearTFC extends ModelBase
 {
-    private ModelRenderer neck;
     private ModelRenderer bearHead;
-    private ModelRenderer body;
-    private ModelRenderer mainBody;
-    private ModelRenderer leg1;
+    private ModelRenderer rearbody;
     private ModelRenderer leg2;
-    private ModelRenderer leg3;
     private ModelRenderer leg4;
-    private ModelRenderer tail;
-    private ModelRenderer ear1;
+    private ModelRenderer leg1;
+    private ModelRenderer leg3;
+    private ModelRenderer frontbody;
     private ModelRenderer ear2;
+    private ModelRenderer ear1;
     private ModelRenderer nose;
+    private ModelRenderer tail;
+    private ModelRenderer neck;
+
 
     public ModelBearTFC()
     {
-        textureWidth = 128;
+        textureWidth = 80;
         textureHeight = 64;
 
-        neck = new ModelRenderer(this, 0, 29);
-        neck.addBox(0F, 0F, 0F, 4, 5, 8);
-        neck.setRotationPoint(-3F, 12F, -10F);
-        neck.setTextureSize(128, 64);
-        neck.mirror = true;
-        setRotation(neck, 0.3839724F, 0F, 0F);
-        bearHead = new ModelRenderer(this, 0, 0);
-        bearHead.addBox(-3F, -3F, -2F, 6, 6, 4);
-        bearHead.setRotationPoint(-1F, 13.5F, -10F);
-        bearHead.setTextureSize(128, 64);
-        bearHead.mirror = true;
-        setRotation(bearHead, 0F, 0F, 0F);
-        body = new ModelRenderer(this, 24, 18);
-        body.addBox(-4F, -2F, -3F, 6, 7, 7);
-        body.setRotationPoint(0F, 14F, 4F);
-        body.setTextureSize(128, 64);
-        body.mirror = true;
-        setRotation(body, 1.308997F, 0F, 0F);
-        mainBody = new ModelRenderer(this, 24, 0);
-        mainBody.addBox(-4F, -3F, -3F, 8, 10, 8);
-        mainBody.setRotationPoint(-1F, 14F, -3F);
-        mainBody.setTextureSize(128, 64);
-        mainBody.mirror = true;
-        setRotation(mainBody, 1.570796F, 0F, 0F);
-        leg1 = new ModelRenderer(this, 0, 18);
-        leg1.addBox(-1F, 0F, -1F, 2, 8, 3);
-        leg1.setRotationPoint(-2.966667F, 16F, 6F);
-        leg1.setTextureSize(128, 64);
-        leg1.mirror = true;
-        setRotation(leg1, 0F, 0F, 0F);
-        leg2 = new ModelRenderer(this, 0, 18);
-        leg2.addBox(-0.4666667F, 0F, -1F, 2, 8, 3);
-        leg2.setRotationPoint(0.5F, 16F, 6F);
-        leg2.setTextureSize(128, 64);
-        leg2.mirror = true;
-        setRotation(leg2, 0F, 0F, 0F);
-        leg3 = new ModelRenderer(this, 0, 18);
-        leg3.addBox(-1F, 0F, -1F, 2, 8, 3);
-        leg3.setRotationPoint(-3.5F, 16F, -4F);
-        leg3.setTextureSize(128, 64);
-        leg3.mirror = true;
-        setRotation(leg3, 0F, 0F, 0F);
-        leg4 = new ModelRenderer(this, 0, 18);
-        leg4.addBox(-1F, 0F, -1F, 2, 8, 3);
-        leg4.setRotationPoint(1.5F, 16F, -4F);
-        leg4.setTextureSize(128, 64);
-        leg4.mirror = true;
-        setRotation(leg4, 0F, 0F, 0F);
-        tail = new ModelRenderer(this, 10, 18);
-        tail.addBox(-1F, 0F, -1F, 2, 2, 2);
-        tail.setRotationPoint(-1F, 13F, 9F);
-        tail.setTextureSize(128, 64);
-        tail.mirror = true;
-        setRotation(tail, 1.130069F, 0F, 0F);
-        ear1 = new ModelRenderer(this, 16, 14);
-        ear1.addBox(-3F, -5F, 0F, 2, 2, 1);
-        ear1.setRotationPoint(-1F, 13.5F, -10F);
-        ear1.setTextureSize(128, 64);
-        ear1.mirror = true;
-        setRotation(ear1, 0F, 0F, 0F);
-        ear2 = new ModelRenderer(this, 16, 14);
-        ear2.addBox(1F, -5F, 0F, 2, 2, 1);
-        ear2.setRotationPoint(-1F, 13.5F, -10F);
-        ear2.setTextureSize(128, 64);
-        ear2.mirror = true;
-        setRotation(ear2, 0F, 0F, 0F);
-        nose = new ModelRenderer(this, 0, 10);
-        nose.addBox(-1.5F, 0F, -4F, 3, 3, 4);
-        nose.setRotationPoint(-1.0F, 13.5F, -10F);
-        nose.setTextureSize(128, 64);
-        nose.mirror = true;
-        setRotation(nose, 0F, 0F, 0F);
-    }
+        this.frontbody = new ModelRenderer(this, 29, 39);
+        this.frontbody.setRotationPoint(-1.0F, 11F, 9F);
+        this.frontbody.addBox(-5.0F, -19.0F, -6.5F, 13, 13, 12, 0.0F);
+        this.setRotation(frontbody, 1.5707963267948966F, 0.0F, 0.0F);
+        this.leg3 = new ModelRenderer(this, 0, 47);
+        this.leg3.setRotationPoint(4.5F, 12.0F, 5.0F);
+        this.leg3.addBox(-1.0F, 0.0F, -1.0F, 5, 12, 5, 0.0F);
+        this.bearHead = new ModelRenderer(this, 0, 8);
+        this.bearHead.setRotationPoint(0.0F, 9.0F, -4.0F);
+        this.bearHead.addBox(-3.0F, -5.2F, -2.5F, 7, 7, 6, 0.0F);
+        this.nose = new ModelRenderer(this, 5, 0);
+        this.nose.setRotationPoint(0.3F, 0.0F, -0.2F);
+        this.nose.addBox(-2.0F, -2.2F, -5.5F, 4, 4, 4, 0.0F);
+        this.tail = new ModelRenderer(this, 48, 3);
+        this.tail.setRotationPoint(-1.0F, -3.8F, -0.5F);
+        this.tail.addBox(-1.0F, -1.0F, -1.0F, 3, 3, 3, 0.0F);
+        this.setRotation(tail, -0.36425021489121656F, 0.0F, 0.0F);
+        this.leg4 = new ModelRenderer(this, 0, 47);
+        this.leg4.setRotationPoint(-6.5F, 12.0F, 5.0F);
+        this.leg4.addBox(-1.0F, 0.0F, -1.0F, 5, 12, 5, 0.0F);
+        this.ear2 = new ModelRenderer(this, 23, 11);
+        this.ear2.setRotationPoint(0.8F, -2.5F, 1.5F);
+        this.ear2.addBox(-3.5F, -4.0F, 0.0F, 2, 2, 1, 0.0F);
+        this.leg2 = new ModelRenderer(this, 1, 30);
+        this.leg2.setRotationPoint(-6.5F, 0.0F, -8.0F);
+        this.leg2.addBox(-1.0F, -2.0F, -1.0F, 4, 12, 5, 0.0F);
+        this.leg1 = new ModelRenderer(this, 1, 30);
+        this.leg1.setRotationPoint(5.5F, 0.0F, -8.0F);
+        this.leg1.addBox(-1.0F, -2.0F, -1.0F, 4, 12, 5, 0.0F);
+        this.ear1 = new ModelRenderer(this, 23, 11);
+        //this.ear1.mirror = true;
+        this.ear1.setRotationPoint(-1.8F, -2.5F, 1.5F);
+        this.ear1.addBox(3.5F, -4.0F, 0.0F, 2, 2, 1, 0.0F);
+        this.neck = new ModelRenderer(this, 42, 9);
+        this.neck.setRotationPoint(-1F, -26F, -1.0F);
+        this.neck.addBox(-0.5F, 3.0F, -1.4F, 6, 5, 6, -0.2F);
+        this.rearbody = new ModelRenderer(this, 32, 20);
+        this.rearbody.setRotationPoint(0.5F, 10.5F, 14.5F);
+        this.rearbody.addBox(-6.0F, -13.0F, -6.0F, 12, 9, 10, 0.0F);
+        this.setRotation(rearbody, 1.4114477660878142F, 0.0F, 0.0F);
 
+        bearHead.addChild(nose);
+        bearHead.addChild(ear2);
+        rearbody.addChild(tail);
+        bearHead.addChild(ear1);
+        frontbody.addChild(neck);
 
-    @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-
-        float age = 1;
-
-        if (isChild)
-        {
-            float aa = 2F - (1.0F - age);
-            GlStateManager.pushMatrix();
-            float ab = (float) Math.sqrt(1.0F / aa);
-            GlStateManager.scale(ab, ab, ab);
-            GlStateManager.translate(0.0F, 24F * f5 * age / aa, 2F * f5 * age / ab);
-            ear1.render(f5);
-            ear2.render(f5);
-            nose.render(f5);
-            bearHead.render(f5);
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(1.0F / aa, 1.0F / aa, 1.0F / aa);
-            GlStateManager.translate(0.0F, 24F * f5 * age, 0.0F);
-            body.render(f5);
-            mainBody.render(f5);
-            leg1.render(f5);
-            leg2.render(f5);
-            leg3.render(f5);
-            leg4.render(f5);
-            neck.render(f5);
-            tail.render(f5);
-            GlStateManager.popMatrix();
-        }
-        else
-        {
-            ear1.render(f5);
-            ear2.render(f5);
-            nose.render(f5);
-            bearHead.render(f5);
-            body.render(f5);
-            mainBody.render(f5);
-            leg1.render(f5);
-            leg2.render(f5);
-            leg3.render(f5);
-            leg4.render(f5);
-            neck.render(f5);
-            tail.render(f5);
-        }
+        --this.leg3.rotationPointX;
+        ++this.leg4.rotationPointX;
+        ModelRenderer var10000 = this.leg3;
+        var10000.rotationPointZ += 0.0F;
+        var10000 = this.leg4;
+        var10000.rotationPointZ += 0.0F;
+        --this.leg1.rotationPointX;
+        ++this.leg2.rotationPointX;
+        --this.leg1.rotationPointZ;
+        --this.leg2.rotationPointZ;
+        //this.childZOffset += 2.0F;
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    public void render(@Nonnull Entity entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-        bearHead.rotateAngleX = f4 / (180F / (float) Math.PI);
-        bearHead.rotateAngleY = f3 / (180F / (float) Math.PI);
+        this.setRotationAngles(par2, par3, par4, par5, par6, par7, entity);
 
-        ear1.rotateAngleX = f4 / (180F / (float) Math.PI);
-        ear1.rotateAngleY = f3 / (180F / (float) Math.PI);
+        EntityBearTFC bear = ((EntityBearTFC) entity);
 
-        ear2.rotateAngleX = f4 / (180F / (float) Math.PI);
-        ear2.rotateAngleY = f3 / (180F / (float) Math.PI);
+        float percent = (float) bear.getPercentToAdulthood();
 
-        nose.rotateAngleX = f4 / (180F / (float) Math.PI);
-        nose.rotateAngleY = f3 / (180F / (float) Math.PI);
+        float ageScale = 2.0F - percent;
+        float ageHeadScale = (float) Math.pow(1 / ageScale, 0.66);
+        GlStateManager.pushMatrix();
 
-        leg1.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        leg2.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
-        leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
-        leg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
+        GlStateManager.translate(0.0F, 0.75f - (0.75f * percent), 0f);
+        GlStateManager.scale(ageHeadScale, ageHeadScale, ageHeadScale);
+        GlStateManager.translate(0.0F, 0, 0.1875f - (0.1875f * percent));
+
+        bearHead.render(par7);
+        GlStateManager.popMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.0F, 0.75f - (0.75f * percent), 0f);
+        GlStateManager.scale(1 / ageScale, 1 / ageScale, 1 / ageScale);
+
+        frontbody.render(par7);
+        rearbody.render(par7);
+        leg1.render(par7);
+        leg2.render(par7);
+        leg3.render(par7);
+        leg4.render(par7);
+        GlStateManager.popMatrix();
+    }
+
+    @Override
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
+    {
+        super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+        bearHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
+        bearHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
+
+        leg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+
+
+        float f = ageInTicks - (float)entityIn.ticksExisted;
+        float f1 = ((EntityBearTFC)entityIn).getStandingAnimationScale(f);
+        f1 *= f1;
+        float f2 = 1.0F - f1;
+        this.frontbody.rotateAngleX = 1.5707964F - f1 * 3.1415927F * 0.35F;
+        this.frontbody.rotationPointY = 9.0F * f2 + 11.0F * f1;
+        this.leg1.rotationPointY = 14.0F * f2 + -6.0F * f1;
+        this.leg1.rotationPointZ = -8.0F * f2 + -4.0F * f1;
+        ModelRenderer var10000 = this.leg1;
+        var10000.rotateAngleX -= f1 * 3.1415927F * 0.45F;
+        this.leg2.rotationPointY = this.leg1.rotationPointY;
+        this.leg2.rotationPointZ = this.leg1.rotationPointZ;
+        var10000 = this.leg2;
+        var10000.rotateAngleX -= f1 * 3.1415927F * 0.45F;
+        this.bearHead.rotationPointY = 10.0F * f2 + -12.0F * f1;
+        this.bearHead.rotationPointZ = -16.0F * f2 + -3.0F * f1;
+        var10000 = this.bearHead;
+        var10000.rotateAngleX += f1 * 3.1415927F * 0.15F;
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z)
