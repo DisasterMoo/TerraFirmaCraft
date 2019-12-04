@@ -22,7 +22,7 @@ import static net.dries007.tfc.api.util.TFCConstants.MOD_ID;
 @ParametersAreNonnullByDefault
 public class RenderGoatTFC extends RenderLiving<EntityGoatTFC>
 {
-    private static final ResourceLocation GOAT_TEXTURES = new ResourceLocation(MOD_ID, "textures/entity/animal/goat.png");
+    private static final ResourceLocation GOAT_TEXTURES = new ResourceLocation(MOD_ID, "textures/entity/animal/goat/goat.png");
 
     public RenderGoatTFC(RenderManager renderManager)
     {

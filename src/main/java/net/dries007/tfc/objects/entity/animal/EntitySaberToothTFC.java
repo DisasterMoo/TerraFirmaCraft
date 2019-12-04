@@ -45,10 +45,16 @@ import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 public class EntitySaberToothTFC extends EntityAnimalMammal implements IMob
 {
     private static final DataParameter<Boolean> IS_STANDING;
-    private float clientSideStandAnimation0;
-    private float clientSideStandAnimation;
     private static final int DAYS_TO_ADULTHOOD = 1800;
     private static final int DAYS_TO_FULL_GESTATION = 210;
+
+    static
+    {
+        IS_STANDING = EntityDataManager.createKey(EntitySaberToothTFC.class, DataSerializers.BOOLEAN);
+    }
+
+    private float clientSideStandAnimation0;
+    private float clientSideStandAnimation;
 
     @SuppressWarnings("unused")
     public EntitySaberToothTFC(World worldIn)
@@ -77,6 +83,12 @@ public class EntitySaberToothTFC extends EntityAnimalMammal implements IMob
     }
 
     @Override
+    public boolean isFood(ItemStack it)
+    {
+        return it.getItem() == Items.FISH;
+    }
+
+    @Override
     public void birthChildren()
     {
         int numberOfChilds = 1; //one always
@@ -95,10 +107,20 @@ public class EntitySaberToothTFC extends EntityAnimalMammal implements IMob
         return DAYS_TO_FULL_GESTATION;
     }
 
-    @Override
-    public boolean isFood(ItemStack it)
+    public boolean isStanding()
     {
-        return it.getItem() == Items.FISH;
+        return this.dataManager.get(IS_STANDING);
+    }
+
+    public void setStanding(boolean standing)
+    {
+        this.dataManager.set(IS_STANDING, standing);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getStandingAnimationScale(float p_189795_1_)
+    {
+        return (this.clientSideStandAnimation0 + (this.clientSideStandAnimation - this.clientSideStandAnimation0) * p_189795_1_) / 6.0F;
     }
 
     @Override
@@ -119,137 +141,10 @@ public class EntitySaberToothTFC extends EntityAnimalMammal implements IMob
         return entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (getAge() == Age.CHILD ? 2 : 4));
     }
 
-    public boolean isStanding() {
-        return (Boolean)this.dataManager.get(IS_STANDING);
-    }
-    protected void entityInit() {
+    protected void entityInit()
+    {
         super.entityInit();
         this.dataManager.register(IS_STANDING, false);
-    }
-
-    public void setStanding(boolean standing) {
-        this.dataManager.set(IS_STANDING, standing);
-    }
-    static {
-        IS_STANDING = EntityDataManager.createKey(EntitySaberToothTFC.class, DataSerializers.BOOLEAN);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public float getStandingAnimationScale(float p_189795_1_) {
-        return (this.clientSideStandAnimation0 + (this.clientSideStandAnimation - this.clientSideStandAnimation0) * p_189795_1_) / 6.0F;
-    }
-
-    public void onUpdate() {
-        super.onUpdate();
-        if (this.world.isRemote) {
-            this.clientSideStandAnimation0 = this.clientSideStandAnimation;
-            if (this.isStanding()) {
-                this.clientSideStandAnimation = MathHelper.clamp(this.clientSideStandAnimation + 1.0F, 0.0F, 6.0F);
-            } else {
-                this.clientSideStandAnimation = MathHelper.clamp(this.clientSideStandAnimation - 1.0F, 0.0F, 6.0F);
-            }
-        }
-    }
-
-
-
-    class AIPanic extends EntityAIPanic {
-        public AIPanic() {
-            super(EntitySaberToothTFC.this, 1.5D);
-        }
-
-        public boolean shouldExecute() {
-            return !EntitySaberToothTFC.this.isChild() && !EntitySaberToothTFC.this.isBurning() ? false : super.shouldExecute();
-        }
-    }
-
-    class AIMeleeAttack extends EntityAIAttackMelee {
-        public AIMeleeAttack() {
-            super(EntitySaberToothTFC.this, 1.25D, true);
-        }
-
-        protected void checkAndPerformAttack(EntityLivingBase enemy, double distToEnemySqr) {
-            double d0 = this.getAttackReachSqr(enemy);
-            if (distToEnemySqr <= d0 && this.attackTick <= 0) {
-                this.attackTick = 20;
-                this.attacker.attackEntityAsMob(enemy);
-                EntitySaberToothTFC.this.setStanding(false);
-            } else if (distToEnemySqr <= d0 * 2.0D) {
-                if (this.attackTick <= 0) {
-                    EntitySaberToothTFC.this.setStanding(false);
-                    this.attackTick = 20;
-                }
-
-                if (this.attackTick <= 10) {
-                    EntitySaberToothTFC.this.setStanding(true);
-                }
-            } else {
-                this.attackTick = 20;
-                EntitySaberToothTFC.this.setStanding(false);
-            }
-
-        }
-
-        public void resetTask() {
-            EntitySaberToothTFC.this.setStanding(false);
-            super.resetTask();
-        }
-
-        protected double getAttackReachSqr(EntityLivingBase attackTarget) {
-            return (double)(4.0F + attackTarget.width);
-        }
-    }
-
-    class AIHurtByTarget extends EntityAIHurtByTarget {
-        public AIHurtByTarget() {
-            super(EntitySaberToothTFC.this, false, new Class[0]);
-        }
-
-        public void startExecuting() {
-            super.startExecuting();
-            if (EntitySaberToothTFC.this.isChild()) {
-                this.alertOthers();
-                this.resetTask();
-            }
-
-        }
-
-        protected void setEntityAttackTarget(EntityCreature creatureIn, EntityLivingBase entityLivingBaseIn) {
-            if (creatureIn instanceof EntitySaberToothTFC && !creatureIn.isChild()) {
-                super.setEntityAttackTarget(creatureIn, entityLivingBaseIn);
-            }
-
-        }
-    }
-
-    class AIAttackPlayer extends EntityAINearestAttackableTarget<EntityPlayer> {
-        public AIAttackPlayer() {
-            super(EntitySaberToothTFC.this, EntityPlayer.class, 20, true, true, (Predicate)null);
-        }
-
-        public boolean shouldExecute() {
-            if (EntitySaberToothTFC.this.isChild()) {
-                return false;
-            } else {
-                if (super.shouldExecute()) {
-                    Iterator var1 = EntitySaberToothTFC.this.world.getEntitiesWithinAABB(EntitySaberToothTFC.class, EntitySaberToothTFC.this.getEntityBoundingBox().grow(8.0D, 4.0D, 8.0D)).iterator();
-
-                    while(var1.hasNext()) {
-                        EntitySaberToothTFC entitysabertoothtfc = (EntitySaberToothTFC)var1.next();
-                        if (entitysabertoothtfc.isChild()) {
-                            return true;
-                        }
-                    }
-                }
-
-                EntitySaberToothTFC.this.setAttackTarget((EntityLivingBase)null);
-                return false;
-            }
-        }
-
-        protected double getTargetDistance() {
-            return super.getTargetDistance() * 0.5D;
-        }
     }
 
     @Override
@@ -277,6 +172,23 @@ public class EntitySaberToothTFC extends EntityAnimalMammal implements IMob
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     }
 
+    public void onUpdate()
+    {
+        super.onUpdate();
+        if (this.world.isRemote)
+        {
+            this.clientSideStandAnimation0 = this.clientSideStandAnimation;
+            if (this.isStanding())
+            {
+                this.clientSideStandAnimation = MathHelper.clamp(this.clientSideStandAnimation + 1.0F, 0.0F, 6.0F);
+            }
+            else
+            {
+                this.clientSideStandAnimation = MathHelper.clamp(this.clientSideStandAnimation - 1.0F, 0.0F, 6.0F);
+            }
+        }
+    }
+
     @Override
     protected SoundEvent getAmbientSound()
     {
@@ -293,5 +205,135 @@ public class EntitySaberToothTFC extends EntityAnimalMammal implements IMob
     protected void playStepSound(BlockPos pos, Block blockIn)
     {
         this.playSound(SoundEvents.ENTITY_POLAR_BEAR_STEP, 0.15F, 1.0F);
+    }
+
+    class AIPanic extends EntityAIPanic
+    {
+        public AIPanic()
+        {
+            super(EntitySaberToothTFC.this, 1.5D);
+        }
+
+        public boolean shouldExecute()
+        {
+            return (EntitySaberToothTFC.this.isChild() || EntitySaberToothTFC.this.isBurning()) && super.shouldExecute();
+        }
+    }
+
+    class AIMeleeAttack extends EntityAIAttackMelee
+    {
+        public AIMeleeAttack()
+        {
+            super(EntitySaberToothTFC.this, 1.25D, true);
+        }
+
+        public void resetTask()
+        {
+            EntitySaberToothTFC.this.setStanding(false);
+            super.resetTask();
+        }
+
+        protected void checkAndPerformAttack(EntityLivingBase enemy, double distToEnemySqr)
+        {
+            double d0 = this.getAttackReachSqr(enemy);
+            if (distToEnemySqr <= d0 && this.attackTick <= 0)
+            {
+                this.attackTick = 20;
+                this.attacker.attackEntityAsMob(enemy);
+                EntitySaberToothTFC.this.setStanding(false);
+            }
+            else if (distToEnemySqr <= d0 * 2.0D)
+            {
+                if (this.attackTick <= 0)
+                {
+                    EntitySaberToothTFC.this.setStanding(false);
+                    this.attackTick = 20;
+                }
+
+                if (this.attackTick <= 10)
+                {
+                    EntitySaberToothTFC.this.setStanding(true);
+                }
+            }
+            else
+            {
+                this.attackTick = 20;
+                EntitySaberToothTFC.this.setStanding(false);
+            }
+
+        }
+
+        protected double getAttackReachSqr(EntityLivingBase attackTarget)
+        {
+            return 4.0F + attackTarget.width;
+        }
+    }
+
+    class AIHurtByTarget extends EntityAIHurtByTarget
+    {
+        public AIHurtByTarget()
+        {
+            super(EntitySaberToothTFC.this, false);
+        }
+
+        public void startExecuting()
+        {
+            super.startExecuting();
+            if (EntitySaberToothTFC.this.isChild())
+            {
+                this.alertOthers();
+                this.resetTask();
+            }
+
+        }
+
+        protected void setEntityAttackTarget(EntityCreature creatureIn, EntityLivingBase entityLivingBaseIn)
+        {
+            if (creatureIn instanceof EntitySaberToothTFC && !creatureIn.isChild())
+            {
+                super.setEntityAttackTarget(creatureIn, entityLivingBaseIn);
+            }
+
+        }
+    }
+
+    class AIAttackPlayer extends EntityAINearestAttackableTarget<EntityPlayer>
+    {
+        public AIAttackPlayer()
+        {
+            super(EntitySaberToothTFC.this, EntityPlayer.class, 20, true, true, null);
+        }
+
+        public boolean shouldExecute()
+        {
+            if (EntitySaberToothTFC.this.isChild())
+            {
+                return false;
+            }
+            else
+            {
+                if (super.shouldExecute())
+                {
+                    Iterator var1 = EntitySaberToothTFC.this.world.getEntitiesWithinAABB(EntitySaberToothTFC.class, EntitySaberToothTFC.this.getEntityBoundingBox().grow(8.0D, 4.0D, 8.0D)).iterator();
+
+                    while (var1.hasNext())
+                    {
+                        EntitySaberToothTFC entitysabertoothtfc = (EntitySaberToothTFC) var1.next();
+                        if (entitysabertoothtfc.isChild())
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                EntitySaberToothTFC.this.setAttackTarget(null);
+                return false;
+            }
+        }
+
+        protected double getTargetDistance()
+        {
+            return super.getTargetDistance() * 0.5D;
+        }
     }
 }

@@ -58,6 +58,18 @@ public class EntityPheasantTFC extends EntityAnimalTFC
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public Type getType()
+    {
+        return Type.OVIPAROUS;
+    }
+
+    @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -79,18 +91,6 @@ public class EntityPheasantTFC extends EntityAnimalTFC
         }
 
         this.wingRotation += this.wingRotDelta * 2.0F;
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
-    }
-
-    @Override
-    public Type getType()
-    {
-        return Type.OVIPAROUS;
     }
 
     @Override

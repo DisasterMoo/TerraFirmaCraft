@@ -141,8 +141,8 @@ public class ModelPolarBearTFC extends ModelBase
         leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
 
-        float f = ageInTicks - (float)entityIn.ticksExisted;
-        float f1 = ((EntityPolarBearTFC)entityIn).getStandingAnimationScale(f);
+        float f = ageInTicks - (float) entityIn.ticksExisted;
+        float f1 = ((EntityPolarBearTFC) entityIn).getStandingAnimationScale(f);
         f1 *= f1;
         float f2 = 1.0F - f1;
         this.frontbody.rotateAngleX = 1.5707964F - f1 * 3.1415927F * 0.35F;

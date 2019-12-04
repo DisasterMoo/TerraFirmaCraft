@@ -84,6 +84,18 @@ public class EntityRabbitTFC extends EntityAnimalMammal
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public boolean isFood(ItemStack stack)
+    {
+        return OreDictionaryHelper.doesStackMatchOre(stack, "carrot");
+    }
+
+    @Override
     public void updateAITasks()
     {
         super.updateAITasks();
@@ -223,18 +235,6 @@ public class EntityRabbitTFC extends EntityAnimalMammal
     public SoundCategory getSoundCategory()
     {
         return SoundCategory.NEUTRAL;
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
-    }
-
-    @Override
-    public boolean isFood(ItemStack stack)
-    {
-        return OreDictionaryHelper.doesStackMatchOre(stack, "carrot");
     }
 
     @Override

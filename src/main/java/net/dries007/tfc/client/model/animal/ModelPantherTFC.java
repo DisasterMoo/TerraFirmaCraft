@@ -45,7 +45,8 @@ public class ModelPantherTFC extends ModelBase
     public ModelRenderer paw3;
     public ModelRenderer paw4;
 
-    public ModelPantherTFC() {
+    public ModelPantherTFC()
+    {
 
         textureWidth = 64;
         textureHeight = 64;
@@ -197,7 +198,7 @@ public class ModelPantherTFC extends ModelBase
             //GlStateManager.translate(this.neck.rotationPointX * f5, this.neck.rotationPointY * f5, this.neck.rotationPointZ * f5);
             GlStateManager.scale(0.9D, 0.9D, 1.0D);
             //GlStateManager.translate(-this.neck.offsetX, -this.neck.offsetY, -this.neck.offsetZ);
-           // GlStateManager.translate(-this.neck.rotationPointX * f5, -this.neck.rotationPointY * f5, -this.neck.rotationPointZ * f5);
+            // GlStateManager.translate(-this.neck.rotationPointX * f5, -this.neck.rotationPointY * f5, -this.neck.rotationPointZ * f5);
 
             neck.render(f5);
             neckBase.render(f5);

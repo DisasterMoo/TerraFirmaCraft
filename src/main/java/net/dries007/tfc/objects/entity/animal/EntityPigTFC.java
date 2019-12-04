@@ -53,6 +53,12 @@ public class EntityPigTFC extends EntityAnimalMammal
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
     public void birthChildren()
     {
         int numberOfChilds = 8 + rand.nextInt(5); //8-12
@@ -69,12 +75,6 @@ public class EntityPigTFC extends EntityAnimalMammal
     public long gestationDays()
     {
         return DAYS_TO_FULL_GESTATION;
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
     }
 
     @Override

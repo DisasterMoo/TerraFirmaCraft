@@ -26,12 +26,15 @@ public class RenderOcelotTFC extends RenderLiving<EntityOcelotTFC>
     private static final ResourceLocation RED_OCELOT_TEXTURES = new ResourceLocation(MOD_ID, "textures/entity/animal/cat/red.png");
     private static final ResourceLocation SIAMESE_OCELOT_TEXTURES = new ResourceLocation(MOD_ID, "textures/entity/animal/cat/siamese.png");
 
-    public RenderOcelotTFC(RenderManager p_i47199_1_) {
+    public RenderOcelotTFC(RenderManager p_i47199_1_)
+    {
         super(p_i47199_1_, new ModelOcelotTFC(), 0.4F);
     }
 
-    protected ResourceLocation getEntityTexture(EntityOcelotTFC entity) {
-        switch(entity.getTameSkin()) {
+    protected ResourceLocation getEntityTexture(EntityOcelotTFC entity)
+    {
+        switch (entity.getTameSkin())
+        {
             case 0:
             default:
                 return OCELOT_TEXTURES;
@@ -44,9 +47,11 @@ public class RenderOcelotTFC extends RenderLiving<EntityOcelotTFC>
         }
     }
 
-    protected void preRenderCallback(EntityOcelotTFC entitylivingbaseIn, float partialTickTime) {
+    protected void preRenderCallback(EntityOcelotTFC entitylivingbaseIn, float partialTickTime)
+    {
         super.preRenderCallback(entitylivingbaseIn, partialTickTime);
-        if (entitylivingbaseIn.isTamed()) {
+        if (entitylivingbaseIn.isTamed())
+        {
             GlStateManager.scale(0.8F, 0.8F, 0.8F);
         }
 

@@ -71,7 +71,7 @@ public class ModelBearTFC extends ModelBase
         this.leg1.setRotationPoint(5.5F, 0.0F, -8.0F);
         this.leg1.addBox(-1.0F, -2.0F, -1.0F, 4, 12, 5, 0.0F);
         this.ear1 = new ModelRenderer(this, 23, 11);
-        //this.ear1.mirror = true;
+        this.ear1.mirror = true;
         this.ear1.setRotationPoint(-1.8F, -2.5F, 1.5F);
         this.ear1.addBox(3.5F, -4.0F, 0.0F, 2, 2, 1, 0.0F);
         this.neck = new ModelRenderer(this, 42, 9);
@@ -146,8 +146,8 @@ public class ModelBearTFC extends ModelBase
         leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
 
-        float f = ageInTicks - (float)entityIn.ticksExisted;
-        float f1 = ((EntityBearTFC)entityIn).getStandingAnimationScale(f);
+        float f = ageInTicks - (float) entityIn.ticksExisted;
+        float f1 = ((EntityBearTFC) entityIn).getStandingAnimationScale(f);
         f1 *= f1;
         float f2 = 1.0F - f1;
         this.frontbody.rotateAngleX = 1.5707964F - f1 * 3.1415927F * 0.35F;

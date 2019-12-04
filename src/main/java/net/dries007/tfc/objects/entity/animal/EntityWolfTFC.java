@@ -88,6 +88,18 @@ public class EntityWolfTFC extends EntityTameableTFC implements IAnimalTFC
         return temperature > -20 && temperature < 20 && rainfall > 75;
     }
 
+    @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public boolean isFood(ItemStack stack)
+    {
+        return stack.getItem() instanceof ItemFood && ((ItemFood) stack.getItem()).isWolfsFavoriteMeat();
+    }
+
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -249,18 +261,6 @@ public class EntityWolfTFC extends EntityTameableTFC implements IAnimalTFC
             return true;
         }
         return super.processInteract(player, hand);
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
-    }
-
-    @Override
-    public boolean isFood(ItemStack stack)
-    {
-        return stack.getItem() instanceof ItemFood && ((ItemFood) stack.getItem()).isWolfsFavoriteMeat();
     }
 
     public boolean isAngry()

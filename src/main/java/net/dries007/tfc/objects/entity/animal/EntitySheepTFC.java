@@ -81,6 +81,43 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public boolean isReadyForAnimalProduct()
+    {
+        return getAge() != Age.CHILD && hasWool() && getFamiliarity() > 0.15f;
+    }
+
+    @Override
+    public List<ItemStack> getProducts()
+    {
+        // Only white for now
+        return Collections.singletonList(new ItemStack(ItemsTFC.WOOL, 1));
+    }
+
+    @Override
+    public TextComponentTranslation getTooltip()
+    {
+        if (this.getAge() == Age.CHILD)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.young", getAnimalName());
+        }
+        else if (getFamiliarity() <= 0.15f)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.low_familiarity", getAnimalName());
+        }
+        else if (!hasWool())
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.no_wool", getAnimalName());
+        }
+        return null;
+    }
+
+    @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -140,19 +177,6 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable
     }
 
     @Override
-    public boolean isReadyForAnimalProduct()
-    {
-        return getAge() != Age.CHILD && hasWool() && getFamiliarity() > 0.15f;
-    }
-
-    @Override
-    public List<ItemStack> getProducts()
-    {
-        // Only white for now
-        return Collections.singletonList(new ItemStack(ItemsTFC.WOOL, 1));
-    }
-
-    @Override
     public boolean isShearable(@Nonnull ItemStack item, IBlockAccess world, BlockPos pos)
     {
         return isReadyForAnimalProduct();
@@ -175,24 +199,6 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable
         }
         this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
         return ret;
-    }
-
-    @Override
-    public TextComponentTranslation getTooltip()
-    {
-        if (this.getAge() == Age.CHILD)
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.young", getAnimalName());
-        }
-        else if (getFamiliarity() <= 0.15f)
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.low_familiarity", getAnimalName());
-        }
-        else if (!hasWool())
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.no_wool", getAnimalName());
-        }
-        return null;
     }
 
     public int getShearedDay()
@@ -219,9 +225,51 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable
     }
 
     @Override
-    public int getDaysToAdulthood()
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        return DAYS_TO_ADULTHOOD;
+        ItemStack stack = player.getHeldItem(hand);
+        if (OreDictionaryHelper.doesStackMatchOre(stack, "knife"))
+        {
+            if (!this.world.isRemote)
+            {
+                if (this.isReadyForAnimalProduct())
+                {
+                    stack.damageItem(1, player);
+                    ItemStack woolStack = new ItemStack(ItemsTFC.WOOL, 1);
+                    Helpers.spawnItemStack(player.world, new BlockPos(this.posX, this.posY, this.posZ), woolStack);
+                    this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                    this.setShearedDay((int) CalendarTFC.PLAYER_TIME.getTotalDays());
+                }
+                else
+                {
+                    TextComponentTranslation tooltip = getTooltip();
+                    if (tooltip != null)
+                    {
+                        player.sendMessage(tooltip);
+                    }
+                }
+            }
+            return true;
+        }
+        else if (OreDictionaryHelper.doesStackMatchOre(stack, "shears"))
+        {
+            if (!this.world.isRemote)
+            {
+                if (!this.isReadyForAnimalProduct())
+                {
+                    TextComponentTranslation tooltip = getTooltip();
+                    if (tooltip != null)
+                    {
+                        player.sendMessage(tooltip);
+                    }
+                }
+            }
+            return false; // Process done in #onSheared by vanilla
+        }
+        else
+        {
+            return super.processInteract(player, hand);
+        }
     }
 
     @Override
@@ -277,53 +325,5 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable
     protected void playStepSound(BlockPos pos, Block blockIn)
     {
         this.playSound(SoundEvents.ENTITY_SHEEP_STEP, 0.15F, 1.0F);
-    }
-
-    @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
-        ItemStack stack = player.getHeldItem(hand);
-        if (OreDictionaryHelper.doesStackMatchOre(stack, "knife"))
-        {
-            if (!this.world.isRemote)
-            {
-                if (this.isReadyForAnimalProduct())
-                {
-                    stack.damageItem(1, player);
-                    ItemStack woolStack = new ItemStack(ItemsTFC.WOOL, 1);
-                    Helpers.spawnItemStack(player.world, new BlockPos(this.posX, this.posY, this.posZ), woolStack);
-                    this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                    this.setShearedDay((int) CalendarTFC.PLAYER_TIME.getTotalDays());
-                }
-                else
-                {
-                    TextComponentTranslation tooltip = getTooltip();
-                    if (tooltip != null)
-                    {
-                        player.sendMessage(tooltip);
-                    }
-                }
-            }
-            return true;
-        }
-        else if (OreDictionaryHelper.doesStackMatchOre(stack, "shears"))
-        {
-            if (!this.world.isRemote)
-            {
-                if (!this.isReadyForAnimalProduct())
-                {
-                    TextComponentTranslation tooltip = getTooltip();
-                    if (tooltip != null)
-                    {
-                        player.sendMessage(tooltip);
-                    }
-                }
-            }
-            return false; // Process done in #onSheared by vanilla
-        }
-        else
-        {
-            return super.processInteract(player, hand);
-        }
     }
 }

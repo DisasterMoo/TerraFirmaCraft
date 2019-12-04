@@ -53,6 +53,18 @@ public class EntityDeerTFC extends EntityAnimalMammal
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public boolean isFood(ItemStack stack)
+    {
+        return stack.getItem() == ItemsTFC.SALT;
+    }
+
+    @Override
     public void birthChildren()
     {
         int numberOfChilds = 1; //one always
@@ -69,18 +81,6 @@ public class EntityDeerTFC extends EntityAnimalMammal
     public long gestationDays()
     {
         return DAYS_TO_FULL_GESTATION;
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
-    }
-
-    @Override
-    public boolean isFood(ItemStack stack)
-    {
-        return stack.getItem() == ItemsTFC.SALT;
     }
 
     @Override

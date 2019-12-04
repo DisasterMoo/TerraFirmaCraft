@@ -88,6 +88,7 @@ public class ModelWolfTFC extends ModelBase
     /**
      * Sets the models various rotation angles then renders the model.
      */
+    @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
         super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);

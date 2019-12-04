@@ -69,6 +69,44 @@ public class EntityCowTFC extends EntityAnimalMammal
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public boolean isReadyForAnimalProduct()
+    {
+        return getFamiliarity() > 0.15f && hasMilk();
+    }
+
+    @Override
+    public TextComponentTranslation getTooltip()
+    {
+        if (this.getGender() == Gender.MALE)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.male_milk");
+        }
+        else if (this.getAge() == Age.OLD)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.old", getAnimalName());
+        }
+        else if (this.getAge() == Age.CHILD)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.young", getAnimalName());
+        }
+        else if (getFamiliarity() <= 0.15f)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.low_familiarity", getAnimalName());
+        }
+        else if (!hasMilk())
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.no_milk", getAnimalName());
+        }
+        return null;
+    }
+
+    @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -147,44 +185,6 @@ public class EntityCowTFC extends EntityAnimalMammal
         {
             return super.processInteract(player, hand);
         }
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
-    }
-
-    @Override
-    public boolean isReadyForAnimalProduct()
-    {
-        return getFamiliarity() > 0.15f && hasMilk();
-    }
-
-    @Override
-    public TextComponentTranslation getTooltip()
-    {
-        if (this.getGender() == Gender.MALE)
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.male_milk");
-        }
-        else if (this.getAge() == Age.OLD)
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.old", getAnimalName());
-        }
-        else if (this.getAge() == Age.CHILD)
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.young", getAnimalName());
-        }
-        else if (getFamiliarity() <= 0.15f)
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.low_familiarity", getAnimalName());
-        }
-        else if (!hasMilk())
-        {
-            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.no_milk", getAnimalName());
-        }
-        return null;
     }
 
     protected long getMilkedDay()
