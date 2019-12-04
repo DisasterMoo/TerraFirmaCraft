@@ -7,6 +7,7 @@ package net.dries007.tfc.objects.entity.animal;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -18,11 +19,13 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.oredict.OreDictionary;
@@ -34,11 +37,16 @@ import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.objects.LootTablesTFC;
 import net.dries007.tfc.objects.entity.ai.EntityAIFindNest;
 import net.dries007.tfc.util.calendar.CalendarTFC;
+import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 
+import static net.dries007.tfc.api.util.TFCConstants.MOD_ID;
+
 @ParametersAreNonnullByDefault
-public class EntityDuckTFC extends EntityAnimalTFC
+public class EntityDuckTFC extends EntityAnimalTFC implements IAnimalTFC
 {
+    private static final long DEFAULT_TICKS_TO_LAY_EGGS = ICalendar.TICKS_IN_DAY;
+    private long lastLaying; //The last time(in ticks)
     private static final int DAYS_TO_ADULTHOOD = 124;
     private static final int DAYS_TO_HATCH_EGG = 21;
 
@@ -59,41 +67,13 @@ public class EntityDuckTFC extends EntityAnimalTFC
     {
         super(worldIn, gender, birthDay);
         this.setSize(0.9F, 0.9F);
+        this.lastLaying = -1;
     }
 
     @Override
     public boolean isValidSpawnConditions(Biome biome, float temperature, float rainfall)
     {
-        return (biome == BiomesTFC.RIVER || biome == BiomesTFC.SWAMPLAND || biome == BiomesTFC.PLAINS) && temperature > 22 && rainfall > 350;
-    }
-
-    @Override
-    public int getDaysToAdulthood()
-    {
-        return DAYS_TO_ADULTHOOD;
-    }
-
-    @Override
-    public Type getType()
-    {
-        return Type.OVIPAROUS;
-    }
-
-    @Override
-    public List<ItemStack> getProducts()
-    {
-        List<ItemStack> eggs = new ArrayList<>();
-        ItemStack egg = new ItemStack(Items.EGG);
-        if (this.isFertilized())
-        {
-            IEgg cap = egg.getCapability(CapabilityEgg.CAPABILITY, null);
-            if (cap != null)
-            {
-                cap.setFertilized(new EntityChickenTFC(this.world), DAYS_TO_HATCH_EGG + CalendarTFC.PLAYER_TIME.getTotalDays());
-            }
-        }
-        eggs.add(egg);
-        return eggs;
+        return (biome == BiomesTFC.RIVER || biome == BiomesTFC.SWAMPLAND || biome == BiomesTFC.PLAINS) && temperature > 22 && rainfall > 500;
     }
 
     @Override
@@ -115,6 +95,19 @@ public class EntityDuckTFC extends EntityAnimalTFC
     }
 
     @Override
+    public int getDaysToAdulthood()
+    {
+        return DAYS_TO_ADULTHOOD;
+    }
+
+    @Override
+    public void writeEntityToNBT(@Nonnull NBTTagCompound nbt)
+    {
+        super.writeEntityToNBT(nbt);
+        nbt.setLong("laying", lastLaying);
+    }
+
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
         return TFCSounds.ANIMAL_DUCK_HURT;
@@ -125,6 +118,7 @@ public class EntityDuckTFC extends EntityAnimalTFC
     {
         return TFCSounds.ANIMAL_DUCK_DEATH;
     }
+
 
     @Override
     protected void initEntityAI()
@@ -168,4 +162,74 @@ public class EntityDuckTFC extends EntityAnimalTFC
     {
         this.playSound(SoundEvents.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
     }
+
+    @Override
+    public void readEntityFromNBT(@Nonnull NBTTagCompound nbt)
+    {
+        super.readEntityFromNBT(nbt);
+        this.lastLaying = nbt.getLong("laying");
+    }
+
+    @Override
+    public Type getType()
+    {
+        return Type.OVIPAROUS;
+    }
+
+    @Override
+    public boolean isReadyForAnimalProduct()
+    {
+        // Is ready for laying eggs?
+        return this.getFamiliarity() > 0.15f && hasEggs();
+    }
+
+    @Override
+    public TextComponentTranslation getTooltip()
+    {
+        if (this.getGender() == Gender.MALE)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.male_egg");
+        }
+        else if (this.getAge() == Age.OLD)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.old", getAnimalName());
+        }
+        else if (this.getAge() == Age.CHILD)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.young", getAnimalName());
+        }
+        else if (getFamiliarity() <= 0.15f)
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.low_familiarity", getAnimalName());
+        }
+        else if (!hasEggs())
+        {
+            return new TextComponentTranslation(MOD_ID + ".tooltip.animal.product.no_egg", getAnimalName());
+        }
+        return null;
+    }
+
+    @Override
+    public List<ItemStack> getProducts()
+    {
+        List<ItemStack> eggs = new ArrayList<>();
+        ItemStack egg = new ItemStack(Items.EGG);
+        if (this.isFertilized())
+        {
+            IEgg cap = egg.getCapability(CapabilityEgg.CAPABILITY, null);
+            if (cap != null)
+            {
+                cap.setFertilized(new EntityDuckTFC(this.world), DAYS_TO_HATCH_EGG + CalendarTFC.PLAYER_TIME.getTotalDays());
+            }
+        }
+        eggs.add(egg);
+        return eggs;
+    }
+
+
+    protected boolean hasEggs()
+    {
+        return this.getGender() == Gender.FEMALE && this.getAge() == Age.ADULT && CalendarTFC.PLAYER_TIME.getTicks() >= this.lastLaying + DEFAULT_TICKS_TO_LAY_EGGS;
+    }
+
 }
