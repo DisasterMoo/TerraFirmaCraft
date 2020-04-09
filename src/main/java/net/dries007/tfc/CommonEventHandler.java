@@ -61,7 +61,10 @@ import net.dries007.tfc.api.capability.damage.CapabilityDamageResistance;
 import net.dries007.tfc.api.capability.damage.DamageType;
 import net.dries007.tfc.api.capability.egg.CapabilityEgg;
 import net.dries007.tfc.api.capability.egg.EggHandler;
-import net.dries007.tfc.api.capability.food.*;
+import net.dries007.tfc.api.capability.food.CapabilityFood;
+import net.dries007.tfc.api.capability.food.FoodHandler;
+import net.dries007.tfc.api.capability.food.FoodStatsTFC;
+import net.dries007.tfc.api.capability.food.IFoodStatsTFC;
 import net.dries007.tfc.api.capability.forge.CapabilityForgeable;
 import net.dries007.tfc.api.capability.forge.ForgeableHeatableHandler;
 import net.dries007.tfc.api.capability.heat.CapabilityItemHeat;
@@ -76,7 +79,6 @@ import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
 import net.dries007.tfc.api.types.ICreatureTFC;
-import net.dries007.tfc.api.types.IPredator;
 import net.dries007.tfc.api.types.Metal;
 import net.dries007.tfc.api.types.Rock;
 import net.dries007.tfc.network.PacketCalendarUpdate;
@@ -238,16 +240,12 @@ public final class CommonEventHandler
                         player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.PLAYERS, 1.0f, 1.0f);
                         if (isFreshWater)
                         {
-                            foodStats.attemptDrink(10, false);
+                            foodStats.addThirst(10); //Simulation already proven that i can drink this amount
                         }
                         else
                         {
-                            foodStats.attemptDrink(-1, false);
+                            foodStats.addThirst(-1); //Simulation already proven that i can drink this amount
                         }
-                    }
-                    else
-                    {
-                        foodStats.resetCooldown();
                     }
                     event.setCancellationResult(EnumActionResult.SUCCESS);
                     event.setCanceled(true);
@@ -351,7 +349,7 @@ public final class CommonEventHandler
                 }
                 else
                 {
-                    foodHandler = new FoodHandler(stack.getTagCompound(), new FoodData());
+                    foodHandler = new FoodHandler(stack.getTagCompound(), new float[] {1, 0, 0, 0, 0}, 0, 0, 1);
                     event.addCapability(CapabilityFood.KEY, foodHandler);
                 }
             }
@@ -573,16 +571,6 @@ public final class CommonEventHandler
         World world = event.getWorld();
         BlockPos pos = new BlockPos(event.getX(), event.getY(), event.getZ());
 
-        if (event.getEntity().isCreatureType(EnumCreatureType.MONSTER, false) || event.getEntity() instanceof IPredator)
-        {
-            // Prevent predators and mobs from spawning where the player lives.
-            ChunkDataTFC data = ChunkDataTFC.get(event.getWorld(), pos);
-            if (ConfigTFC.GENERAL.spawnProtectionEnable && (ConfigTFC.GENERAL.spawnProtectionMinY <= event.getY()) && data.isSpawnProtected())
-            {
-                event.setResult(Event.Result.DENY);
-            }
-        }
-
         // Check creature spawning - Prevents vanilla's respawning mechanic to spawn creatures outside their allowed conditions
         if (event.getEntity() instanceof ICreatureTFC)
         {
@@ -606,10 +594,10 @@ public final class CommonEventHandler
             event.setResult(Event.Result.DENY);
         }
 
-        // Stop mob spawning in surface
-        if (ConfigTFC.WORLD.preventMobsOnSurface)
+        // Stop mob spawning in surface (only mobs, not EntityAnimals that also implements IMob)
+        if (ConfigTFC.GENERAL.preventMobsOnSurface)
         {
-            if (event.getEntity().isCreatureType(EnumCreatureType.MONSTER, false))
+            if (event.getEntity().isCreatureType(EnumCreatureType.MONSTER, false) && !event.getEntity().isCreatureType(EnumCreatureType.CREATURE, false))
             {
                 int maximumY = (WorldTypeTFC.SEALEVEL - WorldTypeTFC.ROCKLAYER2) / 2 + WorldTypeTFC.ROCKLAYER2; // Half through rock layer 1
                 if (pos.getY() >= maximumY || world.canSeeSky(pos))
@@ -707,16 +695,13 @@ public final class CommonEventHandler
     public static void onFluidPlaceBlock(BlockEvent.FluidPlaceBlockEvent event)
     {
         // Since cobble is a gravity block, placing it can lead to world crashes, so we avoid doing that and place rhyolite instead
-        if (!ConfigTFC.GENERAL.disableLavaWaterPlacesTFCBlocks)
+        if (event.getNewState().getBlock() == Blocks.STONE)
         {
-            if (event.getNewState().getBlock() == Blocks.STONE)
-            {
-                event.setNewState(BlockRockVariant.get(Rock.BASALT, Rock.Type.RAW).getDefaultState().withProperty(BlockRockRaw.CAN_FALL, false));
-            }
-            if (event.getNewState().getBlock() == Blocks.COBBLESTONE)
-            {
-                event.setNewState(BlockRockVariant.get(Rock.RHYOLITE, Rock.Type.RAW).getDefaultState().withProperty(BlockRockRaw.CAN_FALL, false));
-            }
+            event.setNewState(BlockRockVariant.get(Rock.BASALT, Rock.Type.RAW).getDefaultState().withProperty(BlockRockRaw.CAN_FALL, false));
+        }
+        if (event.getNewState().getBlock() == Blocks.COBBLESTONE)
+        {
+            event.setNewState(BlockRockVariant.get(Rock.RHYOLITE, Rock.Type.RAW).getDefaultState().withProperty(BlockRockRaw.CAN_FALL, false));
         }
     }
 
@@ -762,7 +747,7 @@ public final class CommonEventHandler
         int hugeHeavyCount = 0;
         for (ItemStack stack : inventory.mainInventory)
         {
-            if (CapabilityItemSize.checkItemSize(stack, Size.HUGE, Weight.VERY_HEAVY))
+            if (CapabilityItemSize.checkItemSize(stack, Size.HUGE, Weight.HEAVY))
             {
                 hugeHeavyCount++;
                 if (hugeHeavyCount >= 2)
@@ -773,7 +758,7 @@ public final class CommonEventHandler
         }
         for (ItemStack stack : inventory.armorInventory)
         {
-            if (CapabilityItemSize.checkItemSize(stack, Size.HUGE, Weight.VERY_HEAVY))
+            if (CapabilityItemSize.checkItemSize(stack, Size.HUGE, Weight.HEAVY))
             {
                 hugeHeavyCount++;
                 if (hugeHeavyCount >= 2)
@@ -784,7 +769,7 @@ public final class CommonEventHandler
         }
         for (ItemStack stack : inventory.offHandInventory)
         {
-            if (CapabilityItemSize.checkItemSize(stack, Size.HUGE, Weight.VERY_HEAVY))
+            if (CapabilityItemSize.checkItemSize(stack, Size.HUGE, Weight.HEAVY))
             {
                 hugeHeavyCount++;
                 if (hugeHeavyCount >= 2)

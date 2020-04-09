@@ -50,14 +50,14 @@ public class ItemBrickTFC extends ItemTFC implements IRockObject
     @Override
     public Size getSize(ItemStack stack)
     {
-        return Size.SMALL; // Stored everywhere
+        return Size.TINY;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(ItemStack stack)
     {
-        return Weight.LIGHT; // Stacksize = 32
+        return Weight.LIGHT;
     }
 
     @Nonnull

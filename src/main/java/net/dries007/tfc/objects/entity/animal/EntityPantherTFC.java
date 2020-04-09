@@ -5,7 +5,6 @@
 
 package net.dries007.tfc.objects.entity.animal;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -13,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -25,9 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.types.IPredator;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.objects.LootTablesTFC;
 import net.dries007.tfc.objects.entity.ai.EntityAIAttackMeleeTFC;
@@ -35,7 +33,7 @@ import net.dries007.tfc.util.climate.BiomeHelper;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 
 @ParametersAreNonnullByDefault
-public class EntityPantherTFC extends EntityAnimalMammal implements IPredator
+public class EntityPantherTFC extends EntityAnimalMammal implements IMob
 {
     private static final int DAYS_TO_ADULTHOOD = 1800;
 
@@ -59,7 +57,7 @@ public class EntityPantherTFC extends EntityAnimalMammal implements IPredator
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome) &&
             (biomeType == BiomeHelper.BiomeType.TROPICAL_FOREST || biomeType == BiomeHelper.BiomeType.TEMPERATE_FOREST))
         {
-            return ConfigTFC.WORLD.predatorSpawnRarity;
+            return 0; // todo this is a WIP animal, so disabled for the time being
         }
         return 0;
     }
@@ -71,7 +69,7 @@ public class EntityPantherTFC extends EntityAnimalMammal implements IPredator
     }
 
     @Override
-    public boolean isFood(@Nonnull ItemStack stack)
+    public boolean isFood(ItemStack stack)
     {
         // Since there's no way to get fish in default TFC, let's consider meats as also valid food items for cats
         return (stack.getItem() == Items.FISH) || (stack.getItem() instanceof ItemFood && ((ItemFood) stack.getItem()).isWolfsFavoriteMeat());
@@ -90,10 +88,16 @@ public class EntityPantherTFC extends EntityAnimalMammal implements IPredator
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return TFCSounds.ANIMAL_PANTHER_HURT; }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
+    {
+        return TFCSounds.ANIMAL_BEAR_HURT; // todo
+    }
 
     @Override
-    protected SoundEvent getDeathSound() { return TFCSounds.ANIMAL_PANTHER_DEATH; }
+    protected SoundEvent getDeathSound()
+    {
+        return TFCSounds.ANIMAL_BEAR_DEATH; // todo
+    }
 
     @Override
     public boolean attackEntityAsMob(Entity entityIn)
@@ -138,19 +142,19 @@ public class EntityPantherTFC extends EntityAnimalMammal implements IPredator
     @Override
     protected SoundEvent getAmbientSound()
     {
-        return Constants.RNG.nextInt(100) < 5 ? TFCSounds.ANIMAL_PANTHER_CRY : TFCSounds.ANIMAL_PANTHER_SAY;
+        return Constants.RNG.nextInt(100) < 5 ? TFCSounds.ANIMAL_BEAR_CRY : TFCSounds.ANIMAL_BEAR_SAY; // todo
     }
 
     @Nullable
     @Override
     protected ResourceLocation getLootTable()
     {
-        return LootTablesTFC.ANIMALS_GRAN_FELINE;
+        return LootTablesTFC.ANIMALS_BEAR; // todo
     }
 
     @Override
     protected void playStepSound(BlockPos pos, Block blockIn)
     {
-        this.playSound(SoundEvents.ENTITY_HORSE_STEP, 0.15F, 1.0F); //todo
+        this.playSound(SoundEvents.ENTITY_POLAR_BEAR_STEP, 0.15F, 1.0F); // todo
     }
 }

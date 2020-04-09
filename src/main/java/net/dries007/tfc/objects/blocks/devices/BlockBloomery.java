@@ -18,7 +18,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -33,13 +32,12 @@ import net.minecraft.world.World;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.objects.blocks.BlocksTFC;
 import net.dries007.tfc.objects.blocks.property.ILightableBlock;
 import net.dries007.tfc.objects.items.ItemFireStarter;
 import net.dries007.tfc.objects.te.TEBloomery;
 import net.dries007.tfc.util.Helpers;
-import net.dries007.tfc.util.block.Multiblock;
+import net.dries007.tfc.util.Multiblock;
 
 import static net.minecraft.block.BlockTrapDoor.OPEN;
 
@@ -214,14 +212,14 @@ public class BlockBloomery extends BlockHorizontal implements IItemSize, ILighta
     @Nonnull
     public Size getSize(ItemStack stack)
     {
-        return Size.LARGE; // Only in chests
+        return Size.VERY_SMALL;
     }
 
     @Override
     @Nonnull
     public Weight getWeight(ItemStack stack)
     {
-        return Weight.VERY_HEAVY;  // stacksize = 1
+        return Weight.HEAVY;
     }
 
     @Override
@@ -348,7 +346,6 @@ public class BlockBloomery extends BlockHorizontal implements IItemSize, ILighta
                     ItemStack held = player.getHeldItem(hand);
                     if (ItemFireStarter.onIgnition(held))
                     {
-                        TFCTriggers.LIT_TRIGGER.trigger((EntityPlayerMP) player, state.getBlock()); // Trigger lit block
                         worldIn.setBlockState(pos, state.withProperty(LIT, true).withProperty(OPEN, false));
                         te.onIgnite();
                         return true;

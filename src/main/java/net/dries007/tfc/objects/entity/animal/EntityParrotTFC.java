@@ -16,7 +16,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityParrot;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -33,19 +32,15 @@ import net.minecraft.world.biome.Biome;
 
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.capability.food.CapabilityFood;
-import net.dries007.tfc.api.capability.food.IFood;
 import net.dries007.tfc.api.types.IAnimalTFC;
-import net.dries007.tfc.api.types.ILivestock;
 import net.dries007.tfc.objects.LootTablesTFC;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.climate.BiomeHelper;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 
 import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
-public class EntityParrotTFC extends EntityParrot implements IAnimalTFC, ILivestock
+public class EntityParrotTFC extends EntityParrot implements IAnimalTFC
 {
     private static final int DAYS_TO_ADULTHOOD = 180;
     //Values that has a visual effect on client
@@ -145,21 +140,12 @@ public class EntityParrotTFC extends EntityParrot implements IAnimalTFC, ILivest
             {
                 if (this.isHungry())
                 {
-                    // Refuses to eat rotten stuff
-                    IFood cap = itemstack.getCapability(CapabilityFood.CAPABILITY, null);
-                    if (cap != null)
-                    {
-                        if (cap.isRotten())
-                        {
-                            return false;
-                        }
-                    }
                     if (!this.world.isRemote)
                     {
                         lastFed = CalendarTFC.PLAYER_TIME.getTotalDays();
                         lastFDecay = lastFed; //No decay needed
                         this.consumeItemFromStack(player, itemstack);
-                        if (this.getAge() == Age.CHILD || this.getFamiliarity() < getAdultFamiliarityCap())
+                        if (this.getFamiliarity() < getAdultFamiliarityCap())
                         {
                             float familiarity = this.getFamiliarity() + 0.06f;
                             if (this.getAge() != Age.CHILD)
@@ -169,7 +155,6 @@ public class EntityParrotTFC extends EntityParrot implements IAnimalTFC, ILivest
                             this.setFamiliarity(familiarity);
                         }
                         world.playSound(null, this.getPosition(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.AMBIENT, 1.0F, 1.0F);
-                        TFCTriggers.FAMILIARIZATION_TRIGGER.trigger((EntityPlayerMP) player, this); // Trigger familiarization change
                     }
                     return true;
                 }
@@ -380,7 +365,7 @@ public class EntityParrotTFC extends EntityParrot implements IAnimalTFC, ILivest
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome) &&
             (biomeType == BiomeHelper.BiomeType.SAVANNA || biomeType == BiomeHelper.BiomeType.TROPICAL_FOREST))
         {
-            return ConfigTFC.WORLD.livestockSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }

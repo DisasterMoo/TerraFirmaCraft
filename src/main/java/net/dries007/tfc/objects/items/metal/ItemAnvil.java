@@ -38,14 +38,14 @@ public class ItemAnvil extends ItemMetal
     @Nonnull
     public Size getSize(ItemStack stack)
     {
-        return Size.HUGE; // Can't be stored and causes overburden
+        return Size.HUGE;
     }
 
     @Override
     @Nonnull
     public Weight getWeight(ItemStack stack)
     {
-        return Weight.VERY_HEAVY; // Stacksize = 1
+        return Weight.HEAVY;
     }
 
     @Override

@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.FMLServerHandler;
 
 import net.dries007.tfc.api.capability.damage.CapabilityDamageResistance;
+import net.dries007.tfc.api.capability.damage.DamageResistanceRegistry;
 import net.dries007.tfc.api.capability.egg.CapabilityEgg;
 import net.dries007.tfc.api.capability.food.CapabilityFood;
 import net.dries007.tfc.api.capability.food.FoodHandler;
@@ -36,15 +37,14 @@ import net.dries007.tfc.client.gui.overlay.PlayerDataOverlay;
 import net.dries007.tfc.command.*;
 import net.dries007.tfc.network.*;
 import net.dries007.tfc.objects.LootTablesTFC;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.objects.entity.EntitiesTFC;
 import net.dries007.tfc.objects.items.ItemsTFC;
 import net.dries007.tfc.proxy.IProxy;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.fuel.FuelManager;
-import net.dries007.tfc.util.json.JsonConfigRegistry;
 import net.dries007.tfc.world.classic.WorldTypeTFC;
 import net.dries007.tfc.world.classic.chunkdata.CapabilityChunkData;
+import net.dries007.tfc.world.classic.worldgen.vein.VeinRegistry;
 
 import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
@@ -132,7 +132,8 @@ public final class TerraFirmaCraft
         network.registerMessage(new PacketLargeVesselUpdate.Handler(), PacketLargeVesselUpdate.class, ++id, Side.CLIENT);
 
         EntitiesTFC.preInit();
-        JsonConfigRegistry.INSTANCE.preInit(event.getModConfigurationDirectory());
+        VeinRegistry.INSTANCE.preInit(event.getModConfigurationDirectory());
+        DamageResistanceRegistry.INSTANCE.preInit(event.getModConfigurationDirectory());
 
         CapabilityChunkData.preInit();
         CapabilityItemSize.preInit();
@@ -161,7 +162,6 @@ public final class TerraFirmaCraft
         ItemsTFC.init();
         LootTablesTFC.init();
         CapabilityFood.init();
-        TFCTriggers.init();
 
         if (event.getSide().isClient())
         {
@@ -179,7 +179,6 @@ public final class TerraFirmaCraft
                 if (ConfigTFC.GENERAL.forceTFCWorldTypeOnServer)
                 {
                     // This is called before vanilla defaults it, meaning we intercept it's default with ours
-                    // However, we can't actually set this due to fears of overriding the existing world
                     TerraFirmaCraft.getLog().info("Setting default level-type to `tfc_classic`");
                     settings.getStringProperty("level-type", "tfc_classic");
                 }
@@ -187,9 +186,6 @@ public final class TerraFirmaCraft
         }
 
         worldTypeTFC = new WorldTypeTFC();
-
-        CapabilityItemSize.init();
-        CapabilityItemHeat.init();
     }
 
     @Mod.EventHandler
@@ -200,7 +196,8 @@ public final class TerraFirmaCraft
             log.warn("You are not running an official build. Please do not use this and then report bugs or issues.");
         }
         FuelManager.postInit();
-        JsonConfigRegistry.INSTANCE.postInit();
+        VeinRegistry.INSTANCE.postInit();
+        DamageResistanceRegistry.INSTANCE.postInit();
     }
 
     @Mod.EventHandler
@@ -221,7 +218,7 @@ public final class TerraFirmaCraft
 
         event.registerServerCommand(new CommandStripWorld());
         event.registerServerCommand(new CommandHeat());
-        event.registerServerCommand(new CommandPlayerTFC());
+        event.registerServerCommand(new CommandSkill());
         event.registerServerCommand(new CommandTimeTFC());
         event.registerServerCommand(new CommandFindVeins());
         event.registerServerCommand(new CommandDebugInfo());

@@ -102,9 +102,10 @@ public interface IAnimalTFC extends ICreatureTFC
      */
     default double getPercentToAdulthood()
     {
-        long deltaDays = CalendarTFC.PLAYER_TIME.getTotalDays() - this.getBirthDay();
-        long adulthoodDay = this.getDaysToAdulthood();
-        return Math.max(0, Math.min(1, (double) deltaDays / adulthoodDay));
+        double value = (CalendarTFC.PLAYER_TIME.getTotalDays() - this.getBirthDay()) / (double) getDaysToAdulthood();
+        if (value > 1) value = 1;
+        if (value < 0) value = 0;
+        return value;
     }
 
     /**
@@ -115,12 +116,11 @@ public interface IAnimalTFC extends ICreatureTFC
     default Age getAge()
     {
         long deltaDays = CalendarTFC.PLAYER_TIME.getTotalDays() - this.getBirthDay();
-        long adulthoodDay = this.getDaysToAdulthood();
-        if (getCreatureType() == CreatureType.LIVESTOCK && ConfigTFC.GENERAL.enableAnimalAging && deltaDays > adulthoodDay * ConfigTFC.GENERAL.factorAnimalAging)
+        if (getAdultFamiliarityCap() > 0 && ConfigTFC.GENERAL.enableAnimalAging && deltaDays > getDaysToAdulthood() * ConfigTFC.GENERAL.factorAnimalAging)
         {
             return Age.OLD; // if enabled, only for familiarizable animals
         }
-        else if (deltaDays > adulthoodDay)
+        else if (deltaDays > getDaysToAdulthood())
         {
             return Age.ADULT;
         }

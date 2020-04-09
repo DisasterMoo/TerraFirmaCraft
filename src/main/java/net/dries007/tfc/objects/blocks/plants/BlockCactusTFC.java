@@ -121,14 +121,14 @@ public class BlockCactusTFC extends BlockPlantTFC implements IGrowable, ITallPla
     @Override
     public Size getSize(ItemStack stack)
     {
-        return Size.SMALL; // Can store everywhere
+        return Size.NORMAL;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(ItemStack stack)
     {
-        return Weight.MEDIUM; // stacksize = 16
+        return Weight.HEAVY;
     }
 
     @Override

@@ -42,7 +42,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.types.IHuntable;
 import net.dries007.tfc.objects.LootTablesTFC;
 import net.dries007.tfc.util.OreDictionaryHelper;
 import net.dries007.tfc.util.calendar.CalendarTFC;
@@ -50,7 +49,7 @@ import net.dries007.tfc.util.climate.BiomeHelper;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 
 @ParametersAreNonnullByDefault
-public class EntityRabbitTFC extends EntityAnimalMammal implements IHuntable
+public class EntityRabbitTFC extends EntityAnimalMammal
 {
     private static final int DAYS_TO_ADULTHOOD = 240;
     private static final int DAYS_TO_FULL_GESTATION = 30;
@@ -86,7 +85,7 @@ public class EntityRabbitTFC extends EntityAnimalMammal implements IHuntable
                 || biomeType == BiomeHelper.BiomeType.TEMPERATE_FOREST || biomeType == BiomeHelper.BiomeType.TROPICAL_FOREST ||
                 biomeType == BiomeHelper.BiomeType.DESERT))
         {
-            return ConfigTFC.WORLD.huntableSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }
@@ -258,7 +257,7 @@ public class EntityRabbitTFC extends EntityAnimalMammal implements IHuntable
     }
 
     @Override
-    public boolean isFood(@Nonnull ItemStack stack)
+    public boolean isFood(ItemStack stack)
     {
         return OreDictionaryHelper.doesStackMatchOre(stack, "carrot");
     }
@@ -271,6 +270,7 @@ public class EntityRabbitTFC extends EntityAnimalMammal implements IHuntable
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void initEntityAI()
     {
         this.tasks.addTask(1, new EntityAISwimming(this));

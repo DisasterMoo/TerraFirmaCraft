@@ -11,7 +11,6 @@
     "damage_item_food_recipe": "net.dries007.tfc.objects.recipes.ShapelessDamageFoodRecipe$Factory",
     "fluid_food_recipe": "net.dries007.tfc.objects.recipes.ShapelessFluidFoodRecipe$Factory",
     "shaped_skill": "net.dries007.tfc.objects.recipes.ShapedSkillRecipe$Factory",
-    "salting_shapeless": "net.dries007.tfc.objects.recipes.ShapelessSaltingRecipe$Factory",
-    "sandwich": "net.dries007.tfc.objects.recipes.SandwichRecipe$Factory"
+    "salting_shapeless": "net.dries007.tfc.objects.recipes.ShapelessSaltingRecipe$Factory"
   }
 }

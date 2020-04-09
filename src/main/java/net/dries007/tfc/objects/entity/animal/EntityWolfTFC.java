@@ -20,7 +20,6 @@ import net.minecraft.entity.ai.EntityAITargetNonTamed;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemFood;
@@ -39,21 +38,15 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.capability.food.CapabilityFood;
-import net.dries007.tfc.api.capability.food.IFood;
 import net.dries007.tfc.api.types.IAnimalTFC;
-import net.dries007.tfc.api.types.IHuntable;
 import net.dries007.tfc.objects.LootTablesTFC;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 
 import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
 @ParametersAreNonnullByDefault
-// This one is special, since it's familiarizable and is also a predator since it will attack you if provoked plus will hunt other livestock for food.
-// Since this don't fit in the predators list, but should be respawned over time, putting it into the huntable list
-public class EntityWolfTFC extends EntityWolf implements IAnimalTFC, IHuntable
+public class EntityWolfTFC extends EntityWolf implements IAnimalTFC
 {
     private static final int DAYS_TO_ADULTHOOD = 360;
     private static final int DAYS_TO_FULL_GESTATION = 70;
@@ -99,7 +92,7 @@ public class EntityWolfTFC extends EntityWolf implements IAnimalTFC, IHuntable
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome))
         {
             // Spawns everywhere, there's so many species...
-            return ConfigTFC.WORLD.livestockSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }
@@ -209,13 +202,13 @@ public class EntityWolfTFC extends EntityWolf implements IAnimalTFC, IHuntable
     @Override
     public boolean isReadyToMate()
     {
-        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || this.isHungry())
+        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || !this.isHungry())
             return false;
         return this.matingTime == -1 || this.matingTime + EntityAnimalTFC.MATING_COOLDOWN_DEFAULT_TICKS <= CalendarTFC.PLAYER_TIME.getTicks();
     }
 
     @Override
-    public boolean isFood(@Nonnull ItemStack stack)
+    public boolean isFood(ItemStack stack)
     {
         return (stack.getItem() == Items.BONE) || (stack.getItem() instanceof ItemFood && ((ItemFood) stack.getItem()).isWolfsFavoriteMeat());
     }
@@ -401,15 +394,6 @@ public class EntityWolfTFC extends EntityWolf implements IAnimalTFC, IHuntable
             {
                 if (!this.isAngry() && player.isSneaking() && getAdultFamiliarityCap() > 0.0F)
                 {
-                    // Refuses to eat rotten stuff
-                    IFood cap = itemstack.getCapability(CapabilityFood.CAPABILITY, null);
-                    if (cap != null)
-                    {
-                        if (cap.isRotten())
-                        {
-                            return false;
-                        }
-                    }
                     if (this.isHungry())
                     {
                         if (!this.world.isRemote)
@@ -417,7 +401,7 @@ public class EntityWolfTFC extends EntityWolf implements IAnimalTFC, IHuntable
                             lastFed = CalendarTFC.PLAYER_TIME.getTotalDays();
                             lastFDecay = lastFed; //No decay needed
                             this.consumeItemFromStack(player, itemstack);
-                            if (this.getAge() == Age.CHILD || this.getFamiliarity() < getAdultFamiliarityCap())
+                            if (this.getFamiliarity() < getAdultFamiliarityCap())
                             {
                                 float familiarity = this.getFamiliarity() + 0.06f;
                                 if (this.getAge() != Age.CHILD)
@@ -427,7 +411,6 @@ public class EntityWolfTFC extends EntityWolf implements IAnimalTFC, IHuntable
                                 this.setFamiliarity(familiarity);
                             }
                             world.playSound(null, this.getPosition(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.AMBIENT, 1.0F, 1.0F);
-                            TFCTriggers.FAMILIARIZATION_TRIGGER.trigger((EntityPlayerMP) player, this); // Trigger familiarization change
                         }
                         return true;
                     }

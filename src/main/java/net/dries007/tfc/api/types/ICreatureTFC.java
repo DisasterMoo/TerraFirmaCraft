@@ -61,16 +61,4 @@ public interface ICreatureTFC
     {
         return 1;
     }
-
-    /**
-     * Returns this creature type
-     *
-     * @return CreatureType of this entity
-     */
-    CreatureType getCreatureType();
-
-    enum CreatureType
-    {
-        PREDATOR, HUNTABLE, LIVESTOCK
-    }
 }

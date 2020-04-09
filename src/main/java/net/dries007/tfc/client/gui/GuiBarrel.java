@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
@@ -133,7 +134,7 @@ public class GuiBarrel extends GuiContainerTE<TEBarrel>
             if (recipe != null)
             {
                 String resultName = recipe.getResultName();
-                fontRenderer.drawString(resultName, xSize / 2 - 20, 61, 0x404040);
+                fontRenderer.drawString(resultName, 112 - fontRenderer.getStringWidth(resultName) / 2, 19, 0x404040);
             }
         }
     }
@@ -222,5 +223,13 @@ public class GuiBarrel extends GuiContainerTE<TEBarrel>
     {
         TerraFirmaCraft.getNetwork().sendToServer(new PacketGuiButton(button.id));
         super.actionPerformed(button);
+    }
+
+    private void drawSlotOverlay(Slot slot)
+    {
+        int xPos = slot.xPos - 1;
+        int yPos = slot.yPos - 1;
+
+        this.drawGradientRect(xPos, yPos, xPos + 18, yPos + 18, 0x75FFFFFF, 0x75FFFFFF);
     }
 }

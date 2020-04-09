@@ -20,7 +20,6 @@ import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -38,12 +37,8 @@ import net.minecraft.world.biome.Biome;
 import mcp.MethodsReturnNonnullByDefault;
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.capability.food.CapabilityFood;
-import net.dries007.tfc.api.capability.food.IFood;
 import net.dries007.tfc.api.types.IAnimalTFC;
-import net.dries007.tfc.api.types.ILivestock;
 import net.dries007.tfc.objects.LootTablesTFC;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.climate.BiomeHelper;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
@@ -52,7 +47,7 @@ import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class EntityHorseTFC extends EntityHorse implements IAnimalTFC, ILivestock
+public class EntityHorseTFC extends EntityHorse implements IAnimalTFC
 {
     protected static final int DAYS_TO_ADULTHOOD = 1120;
     protected static final int DAYS_TO_FULL_GESTATION = 240;
@@ -190,7 +185,7 @@ public class EntityHorseTFC extends EntityHorse implements IAnimalTFC, ILivestoc
     @Override
     public boolean isReadyToMate()
     {
-        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || this.isHungry())
+        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || !this.isHungry())
             return false;
         return this.matingTime == -1 || this.matingTime + EntityAnimalTFC.MATING_COOLDOWN_DEFAULT_TICKS <= CalendarTFC.PLAYER_TIME.getTicks();
     }
@@ -256,7 +251,7 @@ public class EntityHorseTFC extends EntityHorse implements IAnimalTFC, ILivestoc
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome) &&
             (biomeType == BiomeHelper.BiomeType.SAVANNA || biomeType == BiomeHelper.BiomeType.PLAINS))
         {
-            return ConfigTFC.WORLD.livestockSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }
@@ -419,21 +414,12 @@ public class EntityHorseTFC extends EntityHorse implements IAnimalTFC, ILivestoc
             {
                 if (this.isHungry())
                 {
-                    // Refuses to eat rotten stuff
-                    IFood cap = itemstack.getCapability(CapabilityFood.CAPABILITY, null);
-                    if (cap != null)
-                    {
-                        if (cap.isRotten())
-                        {
-                            return false;
-                        }
-                    }
                     if (!this.world.isRemote)
                     {
                         lastFed = CalendarTFC.PLAYER_TIME.getTotalDays();
                         lastFDecay = lastFed; //No decay needed
                         this.consumeItemFromStack(player, itemstack);
-                        if (this.getAge() == Age.CHILD || this.getFamiliarity() < getAdultFamiliarityCap())
+                        if (this.getFamiliarity() < getAdultFamiliarityCap())
                         {
                             float familiarity = this.getFamiliarity() + 0.06f;
                             if (this.getAge() != Age.CHILD)
@@ -443,7 +429,6 @@ public class EntityHorseTFC extends EntityHorse implements IAnimalTFC, ILivestoc
                             this.setFamiliarity(familiarity);
                         }
                         world.playSound(null, this.getPosition(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.AMBIENT, 1.0F, 1.0F);
-                        TFCTriggers.FAMILIARIZATION_TRIGGER.trigger((EntityPlayerMP) player, this); // Trigger familiarization change
                     }
                     return true;
                 }

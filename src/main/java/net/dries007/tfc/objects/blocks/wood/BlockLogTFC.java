@@ -91,7 +91,7 @@ public class BlockLogTFC extends BlockLog implements IItemSize
             stack = player.getHeldItemMainhand();
         }
         final Set<String> toolClasses = stack.getItem().getToolClasses(stack);
-        if (!ConfigTFC.GENERAL.disableTreeFelling && toolClasses.contains("axe") && !toolClasses.contains("saw"))
+        if (toolClasses.contains("axe") && !toolClasses.contains("saw"))
         {
             if (!state.getValue(PLACED))
             {
@@ -237,13 +237,13 @@ public class BlockLogTFC extends BlockLog implements IItemSize
     @Override
     public Size getSize(ItemStack stack)
     {
-        return Size.VERY_LARGE; // Can't store anywhere, but not overburden
+        return Size.LARGE;
     }
 
     @Override
     public Weight getWeight(ItemStack stack)
     {
-        return Weight.MEDIUM; // Stacksize = 16
+        return Weight.LIGHT;
     }
 
     private boolean removeTree(World world, BlockPos pos, @Nullable EntityPlayer player, ItemStack stack, boolean stoneTool)

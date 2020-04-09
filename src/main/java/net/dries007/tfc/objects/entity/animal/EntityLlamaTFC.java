@@ -19,7 +19,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityLlama;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -36,12 +35,8 @@ import net.minecraft.world.biome.Biome;
 
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.capability.food.CapabilityFood;
-import net.dries007.tfc.api.capability.food.IFood;
 import net.dries007.tfc.api.types.IAnimalTFC;
-import net.dries007.tfc.api.types.ILivestock;
 import net.dries007.tfc.objects.LootTablesTFC;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.climate.BiomeHelper;
 import net.dries007.tfc.world.classic.biomes.BiomesTFC;
@@ -49,22 +44,22 @@ import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
 @ParametersAreNonnullByDefault
-public class EntityLlamaTFC extends EntityLlama implements IAnimalTFC, ILivestock
+public class EntityLlamaTFC extends EntityLlama implements IAnimalTFC
 {
     protected static final int DAYS_TO_FULL_GESTATION = 330;
     private static final int DAYS_TO_ADULTHOOD = 900;
     //Values that has a visual effect on client
-    protected static final DataParameter<Boolean> GENDER = EntityDataManager.createKey(EntityLlamaTFC.class, DataSerializers.BOOLEAN);
-    protected static final DataParameter<Integer> BIRTHDAY = EntityDataManager.createKey(EntityLlamaTFC.class, DataSerializers.VARINT);
-    protected static final DataParameter<Float> FAMILIARITY = EntityDataManager.createKey(EntityLlamaTFC.class, DataSerializers.FLOAT);
-    protected long lastFed; //Last time(in days) this entity was fed
-    protected long lastFDecay; //Last time(in days) this entity's familiarity had decayed
-    protected boolean fertilized; //Is this female fertilized?
-    protected long matingTime; //The last time(in ticks) this male tried fertilizing females
-    protected long lastDeath; //Last time(in days) this entity checked for dying of old age
-    protected long pregnantTime; // The time(in days) this entity became pregnant
-    protected float geneJump, geneHealth, geneSpeed, geneStrength; // Basic genetic selection based on vanilla's llama offspring
-    protected int geneVariant;
+    private static final DataParameter<Boolean> GENDER = EntityDataManager.createKey(EntityLlamaTFC.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> BIRTHDAY = EntityDataManager.createKey(EntityLlamaTFC.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> FAMILIARITY = EntityDataManager.createKey(EntityLlamaTFC.class, DataSerializers.FLOAT);
+    private long lastFed; //Last time(in days) this entity was fed
+    private long lastFDecay; //Last time(in days) this entity's familiarity had decayed
+    private boolean fertilized; //Is this female fertilized?
+    private long matingTime; //The last time(in ticks) this male tried fertilizing females
+    private long lastDeath; //Last time(in days) this entity checked for dying of old age
+    private long pregnantTime; // The time(in days) this entity became pregnant
+    private float geneJump, geneHealth, geneSpeed, geneStrength; // Basic genetic selection based on vanilla's llama offspring
+    private int geneVariant;
 
     @SuppressWarnings("unused")
     public EntityLlamaTFC(World world)
@@ -185,7 +180,7 @@ public class EntityLlamaTFC extends EntityLlama implements IAnimalTFC, ILivestoc
     @Override
     public boolean isReadyToMate()
     {
-        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || this.isHungry())
+        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || !this.isHungry())
             return false;
         return this.matingTime == -1 || this.matingTime + EntityAnimalTFC.MATING_COOLDOWN_DEFAULT_TICKS <= CalendarTFC.PLAYER_TIME.getTicks();
     }
@@ -233,21 +228,12 @@ public class EntityLlamaTFC extends EntityLlama implements IAnimalTFC, ILivestoc
             {
                 if (this.isHungry())
                 {
-                    // Refuses to eat rotten stuff
-                    IFood cap = itemstack.getCapability(CapabilityFood.CAPABILITY, null);
-                    if (cap != null)
-                    {
-                        if (cap.isRotten())
-                        {
-                            return false;
-                        }
-                    }
                     if (!this.world.isRemote)
                     {
                         lastFed = CalendarTFC.PLAYER_TIME.getTotalDays();
                         lastFDecay = lastFed; //No decay needed
                         this.consumeItemFromStack(player, itemstack);
-                        if (this.getAge() == Age.CHILD || this.getFamiliarity() < getAdultFamiliarityCap())
+                        if (this.getFamiliarity() < getAdultFamiliarityCap())
                         {
                             float familiarity = this.getFamiliarity() + 0.06f;
                             if (this.getAge() != Age.CHILD)
@@ -257,7 +243,6 @@ public class EntityLlamaTFC extends EntityLlama implements IAnimalTFC, ILivestoc
                             this.setFamiliarity(familiarity);
                         }
                         world.playSound(null, this.getPosition(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.AMBIENT, 1.0F, 1.0F);
-                        TFCTriggers.FAMILIARIZATION_TRIGGER.trigger((EntityPlayerMP) player, this); // Trigger familiarization change
                     }
                     return true;
                 }
@@ -310,7 +295,7 @@ public class EntityLlamaTFC extends EntityLlama implements IAnimalTFC, ILivestoc
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome) &&
             (biomeType == BiomeHelper.BiomeType.TAIGA || biomeType == BiomeHelper.BiomeType.TUNDRA))
         {
-            return ConfigTFC.WORLD.livestockSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }

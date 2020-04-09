@@ -48,14 +48,14 @@ public class ItemDoorTFC extends ItemDoor implements IItemSize
     @Override
     public Size getSize(ItemStack stack)
     {
-        return Size.VERY_LARGE; // Can't be stored
+        return Size.HUGE;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(ItemStack stack)
     {
-        return Weight.HEAVY; // Stacksize = 4
+        return Weight.MEDIUM;
     }
 
     @Override

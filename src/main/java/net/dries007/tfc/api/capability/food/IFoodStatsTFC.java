@@ -9,14 +9,13 @@ import javax.annotation.Nonnull;
 
 public interface IFoodStatsTFC
 {
+    float MAX_PLAYER_NUTRIENTS = 100f;
     float MAX_PLAYER_THIRST = 100f;
+    int FOOD_HUNGER_AMOUNT = 4; // The amount of hunger restored by eating any food, regardless of type
 
     float getHealthModifier();
 
     float getThirst();
-
-    @Nonnull
-    NutritionStats getNutrition();
 
     /**
      * Used to drink from a water source. Has an internal cooldown
@@ -31,16 +30,15 @@ public interface IFoodStatsTFC
     /**
      * Used to directly add thirst, i.e. from an external source like a water bottle
      */
-    default void addThirst(float value)
-    {
-        setThirst(getThirst() + value);
-    }
+    void addThirst(float value);
 
-    void setThirst(float value);
+    float getNutrient(@Nonnull Nutrient nutrient);
 
     /**
-     * Resets cooldown to prevent arm swinging in client when it attempts to drink water
-     * Client also needs to update cooldown after a sucessful drink attempt
+     * Sets the nutrient value directly. Used by command nutrients and for debug purposes
+     *
+     * @param nutrient the nutrient to set
+     * @param value    the value to set to, in [0, 100]
      */
-    void resetCooldown();
+    void setNutrient(@Nonnull Nutrient nutrient, float value);
 }

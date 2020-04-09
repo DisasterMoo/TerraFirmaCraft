@@ -11,13 +11,11 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.api.types.ICreatureTFC;
 import net.dries007.tfc.util.climate.ClimateTFC;
 import net.dries007.tfc.world.classic.chunkdata.ChunkDataTFC;
@@ -29,14 +27,7 @@ import net.dries007.tfc.world.classic.chunkdata.ChunkDataTFC;
 @SuppressWarnings("WeakerAccess")
 public final class WorldEntitySpawnerTFC
 {
-    public static void init()
-    {
-        EnumCreatureType.MONSTER.maxNumberOfCreature = ConfigTFC.WORLD.mobSpawnCount;
-        EnumCreatureType.CREATURE.maxNumberOfCreature = ConfigTFC.WORLD.animalSpawnCount;
-        // Using enum helper to add creature types adds more issues than resolve.
-        // Although it worked in dev and with only minor mods, I had too much trouble with a larger modpack
-    }
-
+    //todo customization for spawning other mods' creatures. maybe a Map<Entity, SpawnRules>, where SpawnRules is a new class with biomes, grouping and spawn weight
 
 
     /**
@@ -51,12 +42,12 @@ public final class WorldEntitySpawnerTFC
      */
     public static void performWorldGenSpawning(World worldIn, Biome biomeIn, int centerX, int centerZ, int diameterX, int diameterZ, Random randomIn)
     {
-        final BlockPos chunkBlockPos = new BlockPos(centerX, 0, centerZ);
+        BlockPos chunkBlockPos = new BlockPos(centerX, 0, centerZ);
 
-        final float temperature = ClimateTFC.getAvgTemp(worldIn, chunkBlockPos);
-        final float rainfall = ChunkDataTFC.getRainfall(worldIn, chunkBlockPos);
-        final float floraDensity = ChunkDataTFC.getFloraDensity(worldIn, chunkBlockPos);
-        final float floraDiversity = ChunkDataTFC.getFloraDiversity(worldIn, chunkBlockPos);
+        float temperature = ClimateTFC.getAvgTemp(worldIn, chunkBlockPos); // Straight forward temperature regions
+        float rainfall = ChunkDataTFC.getRainfall(worldIn, chunkBlockPos); // For deserts
+        float floraDensity = ChunkDataTFC.getFloraDensity(worldIn, chunkBlockPos); //0.125- = no trees, 0.25- = Almost plains / some trees, 0.3-0.5 = normal forest, 0.66+ = too jungle
+        float floraDiversity = ChunkDataTFC.getFloraDiversity(worldIn, chunkBlockPos); // not much effect on animals
 
         // Spawns only one group
         ForgeRegistries.ENTITIES.getValuesCollection().stream()

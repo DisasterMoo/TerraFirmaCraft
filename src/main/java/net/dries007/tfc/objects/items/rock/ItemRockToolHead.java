@@ -49,14 +49,14 @@ public class ItemRockToolHead extends ItemTFC implements IRockObject
     @Override
     public Size getSize(@Nonnull ItemStack stack)
     {
-        return Size.SMALL; // Stored everywhere
+        return Size.TINY;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(@Nonnull ItemStack stack)
     {
-        return Weight.LIGHT; // Stacksize = 32
+        return Weight.LIGHT;
     }
 
     @Nullable

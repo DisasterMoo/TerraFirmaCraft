@@ -5,6 +5,7 @@
 
 package net.dries007.tfc.objects.container;
 
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -136,7 +137,7 @@ public abstract class ContainerTE<T extends TEInventory> extends ContainerSimple
             {
                 return ItemStack.EMPTY;
             }
-            slot.onTake(player, stackCopy);
+            slot.onTake(player, stack);
             return stackCopy;
         }
         return ItemStack.EMPTY;
@@ -205,5 +206,11 @@ public abstract class ContainerTE<T extends TEInventory> extends ContainerSimple
     protected boolean transferStackIntoContainer(ItemStack stack, int containerSlots)
     {
         return !mergeItemStack(stack, 0, containerSlots, false);
+    }
+
+    @Deprecated
+    protected int[] getSlotShiftOrder(int containerSlots)
+    {
+        return IntStream.range(0, containerSlots).toArray();
     }
 }

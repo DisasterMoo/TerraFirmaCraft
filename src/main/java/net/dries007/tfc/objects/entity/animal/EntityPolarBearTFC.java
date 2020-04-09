@@ -26,7 +26,6 @@ import net.minecraft.world.biome.Biome;
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
 import net.dries007.tfc.api.types.IAnimalTFC;
-import net.dries007.tfc.api.types.IPredator;
 import net.dries007.tfc.objects.LootTablesTFC;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.climate.BiomeHelper;
@@ -34,7 +33,7 @@ import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 
 import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
-public class EntityPolarBearTFC extends EntityPolarBear implements IAnimalTFC, IPredator
+public class EntityPolarBearTFC extends EntityPolarBear implements IAnimalTFC
 {
     private static final int DAYS_TO_ADULTHOOD = 1440;
     //Values that has a visual effect on client
@@ -206,7 +205,7 @@ public class EntityPolarBearTFC extends EntityPolarBear implements IAnimalTFC, I
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome) &&
             (biomeType == BiomeHelper.BiomeType.TUNDRA || biomeType == BiomeHelper.BiomeType.TAIGA))
         {
-            return ConfigTFC.WORLD.predatorSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }

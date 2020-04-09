@@ -36,14 +36,14 @@ public class ItemBlockTFC extends ItemBlock implements IItemSize
     @Override
     public Size getSize(@Nonnull ItemStack stack)
     {
-        return size != null ? size.getSize(stack) : Size.SMALL; // Stored everywhere
+        return size != null ? size.getSize(stack) : Size.VERY_SMALL;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(@Nonnull ItemStack stack)
     {
-        return size != null ? size.getWeight(stack) : Weight.LIGHT; // Stacksize = 32
+        return size != null ? size.getWeight(stack) : Weight.MEDIUM;
     }
 
     @Override

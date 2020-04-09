@@ -37,21 +37,17 @@ public final class CapabilityItemSize
 
     public static void preInit()
     {
-        // Register the capability
         CapabilityManager.INSTANCE.register(IItemSize.class, new DumbStorage<>(), ItemSizeHandler::new);
-    }
 
-    public static void init()
-    {
         // Add hardcoded size values for vanilla items
-        CUSTOM_ITEMS.put(IIngredient.of(Items.COAL), () -> new ItemSizeHandler(Size.SMALL, Weight.LIGHT, true)); // Store anywhere stacksize = 32
-        CUSTOM_ITEMS.put(IIngredient.of(Items.STICK), ItemStickCapability::new); // Store anywhere stacksize = 64
-        CUSTOM_ITEMS.put(IIngredient.of(Items.CLAY_BALL), () -> new ItemSizeHandler(Size.SMALL, Weight.VERY_LIGHT, true)); // Store anywhere stacksize = 64
-        CUSTOM_ITEMS.put(IIngredient.of(Items.BED), () -> new ItemSizeHandler(Size.LARGE, Weight.VERY_HEAVY, false)); // Store only in chests stacksize = 1
-        CUSTOM_ITEMS.put(IIngredient.of(Items.MINECART), () -> new ItemSizeHandler(Size.LARGE, Weight.VERY_HEAVY, false)); // Store only in chests stacksize = 1
-        CUSTOM_ITEMS.put(IIngredient.of(Items.ARMOR_STAND), () -> new ItemSizeHandler(Size.LARGE, Weight.HEAVY, true)); // Store only in chests stacksize = 4
-        CUSTOM_ITEMS.put(IIngredient.of(Items.CAULDRON), () -> new ItemSizeHandler(Size.LARGE, Weight.LIGHT, true)); // Store only in chests stacksize = 32
-        CUSTOM_ITEMS.put(IIngredient.of(Blocks.TRIPWIRE_HOOK), () -> new ItemSizeHandler(Size.SMALL, Weight.VERY_LIGHT, true)); // Store anywhere stacksize = 64
+        CUSTOM_ITEMS.put(IIngredient.of(Items.COAL), () -> new ItemSizeHandler(Size.SMALL, Weight.MEDIUM, true));
+        CUSTOM_ITEMS.put(IIngredient.of(Items.STICK), ItemStickCapability::new);
+        CUSTOM_ITEMS.put(IIngredient.of(Items.CLAY_BALL), () -> new ItemSizeHandler(Size.SMALL, Weight.LIGHT, true));
+        CUSTOM_ITEMS.put(IIngredient.of(Items.BED), () -> new ItemSizeHandler(Size.LARGE, Weight.MEDIUM, false));
+        CUSTOM_ITEMS.put(IIngredient.of(Items.MINECART), () -> new ItemSizeHandler(Size.VERY_LARGE, Weight.HEAVY, false));
+        CUSTOM_ITEMS.put(IIngredient.of(Items.ARMOR_STAND), () -> new ItemSizeHandler(Size.LARGE, Weight.LIGHT, true));
+        CUSTOM_ITEMS.put(IIngredient.of(Items.CAULDRON), () -> new ItemSizeHandler(Size.SMALL, Weight.MEDIUM, true));
+        CUSTOM_ITEMS.put(IIngredient.of(Blocks.TRIPWIRE_HOOK), () -> new ItemSizeHandler(Size.VERY_SMALL, Weight.LIGHT, true));
     }
 
     /**
@@ -78,12 +74,7 @@ public final class CapabilityItemSize
     {
         if (!stack.isEmpty())
         {
-            IItemSize size = stack.getCapability(ITEM_SIZE_CAPABILITY, null);
-            if (size != null)
-            {
-                return size;
-            }
-            else if (stack.getItem() instanceof IItemSize)
+            if (stack.getItem() instanceof IItemSize)
             {
                 return (IItemSize) stack.getItem();
             }
@@ -91,6 +82,7 @@ public final class CapabilityItemSize
             {
                 return (IItemSize) ((ItemBlock) stack.getItem()).getBlock();
             }
+            return stack.getCapability(ITEM_SIZE_CAPABILITY, null);
         }
         return null;
     }
@@ -107,25 +99,25 @@ public final class CapabilityItemSize
         }
         // Check for generic item types
         Item item = stack.getItem();
-        if (item instanceof ItemTool || item instanceof ItemSword)
+        if (item instanceof ItemTool)
         {
-            return new ItemSizeHandler(Size.LARGE, Weight.MEDIUM, true); // Stored only in chests, stacksize should be limited to 1 since it is a tool
+            return new ItemSizeHandler(Size.LARGE, Weight.MEDIUM, true);
         }
         else if (item instanceof ItemArmor)
         {
-            return new ItemSizeHandler(Size.LARGE, Weight.VERY_HEAVY, true); // Stored only in chests and stacksize = 1
+            return new ItemSizeHandler(Size.LARGE, Weight.HEAVY, true);
         }
         else if (item instanceof ItemBlock && ((ItemBlock) item).getBlock() instanceof BlockLadder)
         {
-            return new ItemSizeHandler(Size.SMALL, Weight.VERY_LIGHT, true); // Fits small vessels and stacksize = 64
+            return new ItemSizeHandler(Size.SMALL, Weight.LIGHT, true);
         }
         else if (item instanceof ItemBlock)
         {
-            return new ItemSizeHandler(Size.SMALL, Weight.LIGHT, true); // Fits small vessels and stacksize = 32
+            return new ItemSizeHandler(Size.SMALL, Weight.MEDIUM, true); // does not match classic, needed to fix #561
         }
         else
         {
-            return new ItemSizeHandler(Size.VERY_SMALL, Weight.VERY_LIGHT, true); // Stored anywhere and stacksize = 64
+            return new ItemSizeHandler(Size.VERY_SMALL, Weight.LIGHT, true);
         }
     }
 }

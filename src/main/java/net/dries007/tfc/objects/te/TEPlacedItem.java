@@ -137,7 +137,7 @@ public class TEPlacedItem extends TEInventory
                 size = sizeCap.getSize(stack);
             }
 
-            if (size.isSmallerThan(Size.VERY_LARGE) && !isHoldingLargeItem)
+            if (size.isSmallerThan(Size.HUGE) && !isHoldingLargeItem)
             {
                 // Normal and smaller can be placed normally
                 if (inventory.getStackInSlot(slot).isEmpty())
@@ -147,7 +147,7 @@ public class TEPlacedItem extends TEInventory
                     return true;
                 }
             }
-            else if (!size.isSmallerThan(Size.VERY_LARGE)) // Very Large or Huge
+            else if (size == Size.HUGE)
             {
                 // Large items are placed in the single center slot
                 if (isEmpty())

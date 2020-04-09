@@ -90,14 +90,14 @@ public class BlockBarrel extends Block implements IItemSize
     @Override
     public Size getSize(@Nonnull ItemStack stack)
     {
-        return stack.getTagCompound() == null ? Size.VERY_LARGE : Size.HUGE; // Causes overburden if sealed
+        return Size.HUGE;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(@Nonnull ItemStack stack)
     {
-        return Weight.VERY_HEAVY; // Stacksize = 1
+        return stack.getTagCompound() == null ? Weight.MEDIUM : Weight.HEAVY;
     }
 
     @Override

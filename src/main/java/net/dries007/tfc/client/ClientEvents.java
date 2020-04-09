@@ -35,8 +35,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.TerraFirmaCraft;
-import net.dries007.tfc.api.capability.egg.CapabilityEgg;
-import net.dries007.tfc.api.capability.egg.IEgg;
 import net.dries007.tfc.api.capability.food.CapabilityFood;
 import net.dries007.tfc.api.capability.food.IFood;
 import net.dries007.tfc.api.capability.heat.CapabilityItemHeat;
@@ -95,8 +93,7 @@ public class ClientEvents
         RenderingRegistry.registerEntityRenderingHandler(EntityDuckTFC.class, RenderDuckTFC::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityAlpacaTFC.class, RenderAlpacaTFC::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityGoatTFC.class, RenderGoatTFC::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntitySaberToothTFC.class, RenderSaberToothTFC::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityCamelTFC.class, RenderCamelTFC::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityLionTFC.class, RenderLionTFC::new);
     }
 
     @SideOnly(Side.CLIENT)
@@ -216,7 +213,6 @@ public class ClientEvents
                     data.getValidTrees().forEach(t -> list.add(String.format("%s %s (%.1f)", WHITE, t.getRegistryName(), t.getDominance())));
 
                     list.add(GRAY + "Sea level offset: " + WHITE + data.getSeaLevelOffset(x, z));
-                    list.add(GRAY + "Spawn Protection: " + WHITE + data.getSpawnProtection());
                 }
             }
         }
@@ -245,12 +241,7 @@ public class ClientEvents
             IFood nutrients = stack.getCapability(CapabilityFood.CAPABILITY, null);
             if (nutrients != null)
             {
-                nutrients.addTooltipInfo(stack, tt, event.getEntityPlayer());
-            }
-            IEgg eggInfo = stack.getCapability(CapabilityEgg.CAPABILITY, null);
-            if (eggInfo != null)
-            {
-                eggInfo.addEggInfo(stack, tt);
+                nutrients.addNutrientInfo(stack, tt);
             }
             float skillMod = SmithingSkill.getSkillBonus(stack);
             if (skillMod > 0)

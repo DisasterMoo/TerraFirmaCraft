@@ -14,7 +14,6 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -30,7 +29,6 @@ import net.minecraft.world.World;
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
 import net.dries007.tfc.api.types.IAnimalTFC;
-import net.dries007.tfc.objects.advancements.TFCTriggers;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.calendar.ICalendar;
 
@@ -55,7 +53,7 @@ public abstract class EntityAnimalTFC extends EntityAnimal implements IAnimalTFC
      */
     public static int getRandomGrowth(int daysToAdulthood)
     {
-        int lifeTimeDays = daysToAdulthood + Constants.RNG.nextInt((int) (daysToAdulthood * ConfigTFC.GENERAL.factorAnimalAging));
+        int lifeTimeDays = daysToAdulthood + Constants.RNG.nextInt(daysToAdulthood * 3);
         return (int) (CalendarTFC.PLAYER_TIME.getTotalDays() - lifeTimeDays);
     }
 
@@ -135,7 +133,7 @@ public abstract class EntityAnimalTFC extends EntityAnimal implements IAnimalTFC
     @Override
     public boolean isReadyToMate()
     {
-        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || this.isHungry())
+        if (this.getAge() != Age.ADULT || this.getFamiliarity() < 0.3f || this.isFertilized() || !this.isHungry())
             return false;
         return this.matingTime == -1 || this.matingTime + MATING_COOLDOWN_DEFAULT_TICKS <= CalendarTFC.PLAYER_TIME.getTicks();
     }
@@ -221,11 +219,27 @@ public abstract class EntityAnimalTFC extends EntityAnimal implements IAnimalTFC
             {
                 return super.processInteract(player, hand); // Let vanilla spawn a baby
             }
-            else if (this.isFood(itemstack) && player.isSneaking() && getCreatureType() == CreatureType.LIVESTOCK)
+            else if (this.isFood(itemstack) && player.isSneaking() && getAdultFamiliarityCap() > 0.0F)
             {
                 if (this.isHungry())
                 {
-                    return eatFood(itemstack, player);
+                    if (!this.world.isRemote)
+                    {
+                        lastFed = CalendarTFC.PLAYER_TIME.getTotalDays();
+                        lastFDecay = lastFed; //No decay needed
+                        this.consumeItemFromStack(player, itemstack);
+                        if (this.getFamiliarity() < getAdultFamiliarityCap())
+                        {
+                            float familiarity = this.getFamiliarity() + 0.06f;
+                            if (this.getAge() != Age.CHILD)
+                            {
+                                familiarity = Math.min(familiarity, getAdultFamiliarityCap());
+                            }
+                            this.setFamiliarity(familiarity);
+                        }
+                        world.playSound(null, this.getPosition(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.AMBIENT, 1.0F, 1.0F);
+                    }
+                    return true;
                 }
                 else
                 {
@@ -334,36 +348,6 @@ public abstract class EntityAnimalTFC extends EntityAnimal implements IAnimalTFC
         {
             return getAnimalName().getFormattedText();
         }
-    }
-
-    /**
-     * Eat food + raises familiarization
-     * If your animal would refuse to eat said stack (because rotten or anything), return false here
-     * This function is called after every other check is made (animal is hungry for the day + this is a valid food)
-     *
-     * @param stack the food stack to eat
-     * @return true if eaten, false otherwise
-     */
-    protected boolean eatFood(@Nonnull ItemStack stack, EntityPlayer player)
-    {
-        if (!this.world.isRemote)
-        {
-            lastFed = CalendarTFC.PLAYER_TIME.getTotalDays();
-            lastFDecay = lastFed; //No decay needed
-            this.consumeItemFromStack(player, stack);
-            if (this.getAge() == Age.CHILD || this.getFamiliarity() < getAdultFamiliarityCap())
-            {
-                float familiarity = this.getFamiliarity() + 0.06f;
-                if (this.getAge() != Age.CHILD)
-                {
-                    familiarity = Math.min(familiarity, getAdultFamiliarityCap());
-                }
-                this.setFamiliarity(familiarity);
-            }
-            world.playSound(null, this.getPosition(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.AMBIENT, 1.0F, 1.0F);
-            TFCTriggers.FAMILIARIZATION_TRIGGER.trigger((EntityPlayerMP) player, this); // Trigger familiarization change
-        }
-        return true;
     }
 
     @Override

@@ -72,14 +72,14 @@ public class BlockCrucible extends Block implements IHeatConsumerBlock, IItemSiz
     @Override
     public Size getSize(@Nonnull ItemStack stack)
     {
-        return stack.getTagCompound() == null ? Size.LARGE : Size.HUGE; // Can only store in chests if not full, overburden if full and more than one is carried
+        return Size.HUGE;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(@Nonnull ItemStack stack)
     {
-        return Weight.VERY_HEAVY;  // stacksize = 1
+        return stack.getTagCompound() == null ? Weight.MEDIUM : Weight.HEAVY;
     }
 
     @SuppressWarnings("deprecation")

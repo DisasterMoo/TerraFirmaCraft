@@ -42,9 +42,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import net.dries007.tfc.ConfigTFC;
 import net.dries007.tfc.Constants;
-import net.dries007.tfc.api.capability.food.CapabilityFood;
-import net.dries007.tfc.api.capability.food.IFood;
-import net.dries007.tfc.api.types.ILivestock;
 import net.dries007.tfc.objects.LootTablesTFC;
 import net.dries007.tfc.objects.items.ItemsTFC;
 import net.dries007.tfc.util.Helpers;
@@ -56,7 +53,7 @@ import net.dries007.tfc.world.classic.biomes.BiomesTFC;
 import static net.dries007.tfc.TerraFirmaCraft.MOD_ID;
 
 @ParametersAreNonnullByDefault
-public class EntitySheepTFC extends EntityAnimalMammal implements IShearable, ILivestock
+public class EntitySheepTFC extends EntityAnimalMammal implements IShearable
 {
     private static final int DAYS_TO_ADULTHOOD = 360;
     private static final int DAYS_TO_GROW_WOOL = 7;
@@ -86,7 +83,7 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable, IL
         if (!BiomesTFC.isOceanicBiome(biome) && !BiomesTFC.isBeachBiome(biome) &&
             (biomeType == BiomeHelper.BiomeType.PLAINS || biomeType == BiomeHelper.BiomeType.SAVANNA || biomeType == BiomeHelper.BiomeType.TEMPERATE_FOREST))
         {
-            return ConfigTFC.WORLD.livestockSpawnRarity;
+            return ConfigTFC.WORLD.animalSpawnWeight;
         }
         return 0;
     }
@@ -110,18 +107,17 @@ public class EntitySheepTFC extends EntityAnimalMammal implements IShearable, IL
     }
 
     @Override
-    protected boolean eatFood(@Nonnull ItemStack stack, EntityPlayer player)
+    public void onLivingUpdate()
     {
-        // Refuses to eat rotten stuff
-        IFood cap = stack.getCapability(CapabilityFood.CAPABILITY, null);
-        if (cap != null)
+        super.onLivingUpdate();
+        if (!this.world.isRemote)
         {
-            if (cap.isRotten())
+            if (this.getShearedDay() > CalendarTFC.PLAYER_TIME.getTotalDays())
             {
-                return false;
+                //Calendar went backwards by command! this need to update
+                this.setShearedDay((int) CalendarTFC.PLAYER_TIME.getTotalDays());
             }
         }
-        return super.eatFood(stack, player);
     }
 
     @Override

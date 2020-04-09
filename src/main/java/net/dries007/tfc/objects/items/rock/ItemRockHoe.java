@@ -73,7 +73,7 @@ public class ItemRockHoe extends ItemHoe implements IItemSize, IRockObject
     @Override
     public Size getSize(ItemStack stack)
     {
-        return Size.LARGE; // Stored only in chests
+        return Size.LARGE;
     }
 
     @Nonnull

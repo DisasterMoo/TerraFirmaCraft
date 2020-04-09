@@ -50,14 +50,14 @@ public class ItemArmorTFC extends ItemArmor implements IItemSize, IDamageResista
     @Override
     public Size getSize(@Nonnull ItemStack stack)
     {
-        return Size.LARGE; // Stored in chests
+        return Size.LARGE;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(@Nonnull ItemStack stack)
     {
-        return Weight.HEAVY; // Stacksize is already restricted to 1
+        return Weight.HEAVY;
     }
 
     @Override

@@ -63,12 +63,7 @@ public final class CapabilityMetalItem
     {
         if (!stack.isEmpty())
         {
-            IMetalItem metal = stack.getCapability(METAL_OBJECT_CAPABILITY, null);
-            if (metal != null)
-            {
-                return metal;
-            }
-            else if (stack.getItem() instanceof IMetalItem)
+            if (stack.getItem() instanceof IMetalItem)
             {
                 return (IMetalItem) stack.getItem();
             }
@@ -76,6 +71,7 @@ public final class CapabilityMetalItem
             {
                 return (IMetalItem) ((ItemBlock) stack.getItem()).getBlock();
             }
+            return stack.getCapability(METAL_OBJECT_CAPABILITY, null);
         }
         return null;
     }

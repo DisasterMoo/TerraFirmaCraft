@@ -142,8 +142,8 @@ public class ItemMetalBucket extends ItemMetal // quite a bit copied out of Item
             FluidStack fluidStack = bucketCap.drain(CAPACITY, false);
             if (fluidStack != null)
             {
-                String fluidName = fluidStack.getLocalizedName();
-                return new TextComponentTranslation(getTranslationKey() + ".filled.name", fluidName).getFormattedText();
+                String fluidname = fluidStack.getLocalizedName();
+                return new TextComponentTranslation("item.tfc.wooden_bucket.filled", fluidname).getFormattedText();
             }
         }
         return super.getItemStackDisplayName(stack);

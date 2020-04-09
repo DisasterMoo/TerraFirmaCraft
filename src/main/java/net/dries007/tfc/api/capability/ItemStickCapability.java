@@ -64,14 +64,14 @@ public class ItemStickCapability extends ItemHeatHandler implements IItemSize
     @Override
     public Size getSize(@Nonnull ItemStack stack)
     {
-        return Size.SMALL; // Store anywhere
+        return Size.SMALL;
     }
 
     @Nonnull
     @Override
     public Weight getWeight(@Nonnull ItemStack stack)
     {
-        return Weight.VERY_LIGHT; // Stacksize = 64
+        return Weight.LIGHT;
     }
 
     @Override

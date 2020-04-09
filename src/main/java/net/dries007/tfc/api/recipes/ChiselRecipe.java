@@ -42,7 +42,7 @@ public class ChiselRecipe extends IForgeRegistryEntry.Impl<ChiselRecipe>
         return stateOut;
     }
 
-    public boolean matches(IBlockState stateIn)
+    private boolean matches(IBlockState stateIn)
     {
         return ingredient.test(stateIn);
     }

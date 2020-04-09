@@ -15,7 +15,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -72,19 +71,6 @@ public final class InteractionManager
                 return EnumActionResult.SUCCESS;
             }
             return EnumActionResult.FAIL;
-        }));
-
-        putBoth(stack -> OreDictionaryHelper.doesStackMatchOre(stack, "bowl"), ((worldIn, playerIn, handIn) -> {
-            // Offhand must contain a knife - avoids opening the salad gui whenever you empty a bowl form eating
-            if (OreDictionaryHelper.doesStackMatchOre(playerIn.getHeldItem(handIn == EnumHand.MAIN_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND), "knife"))
-            {
-                if (!worldIn.isRemote)
-                {
-                    TFCGuiHandler.openGui(worldIn, playerIn, TFCGuiHandler.Type.SALAD);
-                }
-                return EnumActionResult.SUCCESS;
-            }
-            return EnumActionResult.PASS;
         }));
 
         // Logs -> Log Piles (placement + insertion)
