@@ -11,6 +11,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.AbstractChestHorse;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.util.math.MathHelper;
@@ -24,10 +25,8 @@ import net.dries007.tfc.api.types.IAnimalTFC;
 public class ModelCamelTFC extends ModelBase
 {
     public ModelRenderer saddle;
-    public ModelRenderer blanketBase;
     public ModelRenderer frontLegLeftTop;
     public ModelRenderer humpBottom;
-    public ModelRenderer humpTop;
     public ModelRenderer frontLegRightTop;
     public ModelRenderer humpMiddle;
     public ModelRenderer neckBase;
@@ -57,18 +56,10 @@ public class ModelCamelTFC extends ModelBase
     public ModelRenderer strapChestLeft;
     public ModelRenderer strapBellyRight;
     public ModelRenderer strapBellyLeft;
-    public ModelRenderer strapFrontRight;
-    public ModelRenderer strapNeckBottom;
     public ModelRenderer strapBellyBottom;
     public ModelRenderer strapFrontLeft;
     public ModelRenderer strapChestRight;
     public ModelRenderer strapChestBottom;
-    public ModelRenderer strapFrontLeftCurve;
-    public ModelRenderer strapFrontRightCurve;
-    public ModelRenderer blanketMiddle;
-    public ModelRenderer blanketEdgeRight;
-    public ModelRenderer blanketEdgeLeft;
-    public ModelRenderer blanketTop;
     public ModelRenderer frontLegLeftBottom;
     public ModelRenderer toesFrontLeft;
     public ModelRenderer frontLegRightBottom;
@@ -87,124 +78,23 @@ public class ModelCamelTFC extends ModelBase
     public ModelRenderer toesBackRight;
     public ModelRenderer chestLeft;
     public ModelRenderer chestRight;
+    public ModelRenderer frontLegLeftMiddle;
+    public ModelRenderer frontLegRightMiddle;
 
-    public ModelCamelTFC()
-    {
+    public ModelCamelTFC(float scale) {
 
         textureWidth = 128;
-        textureHeight = 128;
+        textureHeight = 80;
 
-        strapFrontRightCurve = new ModelRenderer(this, 0, 0);
-        strapFrontRightCurve.setRotationPoint(-5.22F, 10.65F, -12.6F);
-        strapFrontRightCurve.addBox(0.0F, 0.0F, 0.0F, 0, 6, 1, 0.0F);
-        setRotation(strapFrontRightCurve, -0.5410520681182421F, -0.15707963267948966F, -0.3665191429188092F);
-        frontLegRightTop = new ModelRenderer(this, 110, 24);
-        frontLegRightTop.setRotationPoint(-4.6F, -1.0F, -8.0F);
-        frontLegRightTop.addBox(-1.5F, -2.0F, -1.5F, 3, 17, 3, 0.0F);
-        humpMiddle = new ModelRenderer(this, 66, 27);
-        humpMiddle.setRotationPoint(0.0F, -7.0F, 0.0F);
-        humpMiddle.addBox(-2.5F, -3.0F, -6.0F, 5, 3, 12, 0.0F);
-        strapBellyBottom = new ModelRenderer(this, 0, 0);
-        strapBellyBottom.setRotationPoint(5.2F, 18.1F, 6.7F);
-        strapBellyBottom.addBox(-9.2F, 0.0F, -0.5F, 8, 0, 1, 0.0F);
-        blanketBase = new ModelRenderer(this, 0, 105);
-        blanketBase.setRotationPoint(0.0F, -7.8F, 1.0F);
-        blanketBase.addBox(-5.5F, -0.5F, -10.2F, 11, 4, 19, 0.0F);
-        strapBellyRight = new ModelRenderer(this, 0, 0);
-        strapBellyRight.setRotationPoint(-4.01F, 8.1F, 6.7F);
-        strapBellyRight.addBox(0.0F, 0.0F, -0.5F, 0, 10, 1, 0.0F);
-        chestRight = new ModelRenderer(this, 95, 89);
-        chestRight.mirror = true;
-        chestRight.setRotationPoint(-8.0F, -5.5F, 2.5F);
-        chestRight.addBox(0.0F, 0.0F, -4.0F, 3, 8, 8, 0.0F);
-        setRotation(chestRight, 0.0F, 0.0F, -0.03490658503988659F);
-        toesBackLeft = new ModelRenderer(this, 110, 64);
-        toesBackLeft.setRotationPoint(0.0F, 7.800000190734863F, 0.0F);
-        toesBackLeft.addBox(-1.5F, 0.0F, -2.0F, 3, 2, 3, 0.0F);
-        setRotation(toesBackLeft, 0.17453292012214658F, 0.0F, 0.0F);
-        toesFrontRight = new ModelRenderer(this, 110, 64);
-        toesFrontRight.setRotationPoint(0.0F, 8.0F, 0.0F);
-        toesFrontRight.addBox(-1.5F, 0.0F, -2.0F, 3, 2, 3, 0.0F);
-        humpBottom = new ModelRenderer(this, 58, 43);
-        humpBottom.setRotationPoint(0.0F, -6.0F, 0.0F);
-        humpBottom.addBox(-3.5F, -2.0F, -9.0F, 7, 2, 18, 0.0F);
-        blanketEdgeLeft = new ModelRenderer(this, 50, 85);
-        blanketEdgeLeft.mirror = true;
-        blanketEdgeLeft.setRotationPoint(5.5F, 3.5F, -2.0F);
-        blanketEdgeLeft.addBox(0.0F, 0.0F, -8.2F, 1, 18, 19, 0.0F);
-        strapFrontRight = new ModelRenderer(this, 0, 0);
-        strapFrontRight.setRotationPoint(-5.2F, 5.45F, -9.0F);
-        strapFrontRight.addBox(0.0F, -0.5F, -0.5F, 0, 7, 1, 0.0F);
-        setRotation(strapFrontRight, -0.5235987755982988F, 0.0F, 0.0F);
-        strapFrontLeftCurve = new ModelRenderer(this, 0, 0);
-        strapFrontLeftCurve.setRotationPoint(5.22F, 10.65F, -12.6F);
-        strapFrontLeftCurve.addBox(0.0F, 0.0F, 0.0F, 0, 6, 1, 0.0F);
-        setRotation(strapFrontLeftCurve, -0.5410520681182421F, 0.15707963267948966F, 0.3665191429188092F);
-        tail = new ModelRenderer(this, 26, 0);
-        tail.setRotationPoint(-0.5F, 1.0F, 8.0F);
-        tail.addBox(-0.5F, 0.0F, -0.5F, 1, 12, 1, 0.0F);
-        setRotation(tail, 0.17976891295541594F, 0.0F, 0.0F);
-        backLegRightMiddle = new ModelRenderer(this, 110, 14);
-        backLegRightMiddle.setRotationPoint(0.0F, 11.0F, -0.5F);
-        backLegRightMiddle.addBox(-1.5F, 0.0F, -1.5F, 3, 6, 3, 0.0F);
-        bodyBack = new ModelRenderer(this, 12, 13);
-        bodyBack.setRotationPoint(0.5F, -6.0F, 5.599999904632568F);
-        bodyBack.addBox(-4.5F, 0.0F, 0.0F, 8, 11, 8, 0.0F);
-        mandible = new ModelRenderer(this, 49, 9);
-        mandible.setRotationPoint(0.0F, 2.0F, -2.2F);
-        mandible.addBox(-1.0F, 0.0F, -3.0F, 2, 1, 3, 0.0F);
-        setRotation(mandible, 0.17453292519943295F, 0.0F, 0.0F);
-        chestLeft = new ModelRenderer(this, 95, 89);
-        chestLeft.setRotationPoint(5.0F, -5.5F, 2.5F);
-        chestLeft.addBox(0.0F, 0.0F, -4.0F, 3, 8, 8, 0.0F);
-        setRotation(chestLeft, 0.0F, 0.0F, 0.03490658503988659F);
-        backLegLeftBottom = new ModelRenderer(this, 112, 3);
-        backLegLeftBottom.setRotationPoint(0.0F, 5.800000190734863F, 0.0F);
-        backLegLeftBottom.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, 0.0F);
-        setRotation(backLegLeftBottom, -0.17453292012214658F, 0.0F, 0.0F);
-        saddlePostFront = new ModelRenderer(this, 0, 0);
-        saddlePostFront.setRotationPoint(0.0F, 0.0F, -6.0F);
-        saddlePostFront.addBox(-0.5F, -2.0F, -0.5F, 1, 3, 1, 0.0F);
-        blanketTop = new ModelRenderer(this, 18, 75);
-        blanketTop.setRotationPoint(0.0F, -2.5F, -0.5F);
-        blanketTop.addBox(-2.0F, -2.0F, -4.2F, 4, 3, 8, 0.0F);
         strapChestLeft = new ModelRenderer(this, 0, 0);
         strapChestLeft.setRotationPoint(5.01F, 8.1F, -6.0F);
         strapChestLeft.addBox(0.0F, 0.0F, -0.5F, 0, 12, 1, 0.0F);
-        backLegRightTop = new ModelRenderer(this, 109, 46);
-        backLegRightTop.setRotationPoint(-4.2F, -2.5F, 10.0F);
-        backLegRightTop.addBox(-1.5F, -2.0F, -2.0F, 3, 13, 4, 0.0F);
-        backLegLeftMiddle = new ModelRenderer(this, 110, 14);
-        backLegLeftMiddle.setRotationPoint(0.0F, 11.0F, -0.5F);
-        backLegLeftMiddle.addBox(-1.5F, 0.0F, -1.5F, 3, 6, 3, 0.0F);
-        frontLegLeftTop = new ModelRenderer(this, 110, 24);
-        frontLegLeftTop.setRotationPoint(4.6F, -1.0F, -8.0F);
-        frontLegLeftTop.addBox(-1.5F, -2.0F, -1.5F, 3, 17, 3, 0.0F);
-        backLegRightBottom = new ModelRenderer(this, 112, 3);
-        backLegRightBottom.setRotationPoint(0.0F, 5.800000190734863F, 0.0F);
-        backLegRightBottom.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, 0.0F);
-        setRotation(backLegRightBottom, -0.17453292012214658F, 0.0F, 0.0F);
-        strapNeckBottom = new ModelRenderer(this, 0, 0);
-        strapNeckBottom.setRotationPoint(6.2F, 15.5F, -15.2F);
-        strapNeckBottom.addBox(-9.2F, 0.0F, -0.5F, 6, 0, 1, 0.0F);
-        setRotation(strapNeckBottom, -0.5585053606381855F, 0.0F, 0.0F);
-        blanketMiddle = new ModelRenderer(this, 9, 87);
-        blanketMiddle.setRotationPoint(0.0F, 0.0F, 2.0F);
-        blanketMiddle.addBox(-4.0F, -2.5F, -9.2F, 8, 3, 13, 0.0F);
-        neckUpper = new ModelRenderer(this, 2, 33);
-        neckUpper.setRotationPoint(0.0F, 0.0F, -5.400000095367432F);
-        neckUpper.addBox(-1.5F, -12.0F, -3.0F, 3, 13, 4, 0.0F);
-        setRotation(neckUpper, 0.2617993950843811F, 0.0F, 0.0F);
-        saddle = new ModelRenderer(this, 84, 108);
-        saddle.setRotationPoint(0.0F, -13.0F, 0.0F);
-        saddle.addBox(-3.5F, 0.5F, -7.2F, 7, 5, 15, 0.0F);
-        earLeft = new ModelRenderer(this, 51, 5);
-        earLeft.setRotationPoint(1.6F, -3.0F, 1.0F);
-        earLeft.addBox(-1.0F, -1.0F, -0.5F, 2, 2, 1, 0.0F);
-        setRotation(earLeft, 0.0F, -0.3490658503988659F, 0.5235987755982988F);
-        frontLegLeftBottom = new ModelRenderer(this, 112, 3);
-        frontLegLeftBottom.setRotationPoint(0.0F, 15.0F, 0.0F);
-        frontLegLeftBottom.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, 0.0F);
+        strapBellyBottom = new ModelRenderer(this, 0, 0);
+        strapBellyBottom.setRotationPoint(5.2F, 18.1F, 6.7F);
+        strapBellyBottom.addBox(-9.2F, 0.0F, -0.5F, 8, 0, 1, 0.0F);
+        strapBellyRight = new ModelRenderer(this, 0, 0);
+        strapBellyRight.setRotationPoint(-4.01F, 8.1F, 6.7F);
+        strapBellyRight.addBox(0.0F, 0.0F, -0.5F, 0, 10, 1, 0.0F);
         strapChestBottom = new ModelRenderer(this, 0, 0);
         strapChestBottom.setRotationPoint(4.2F, 20.1F, -6.0F);
         strapChestBottom.addBox(-9.2F, 0.0F, -0.5F, 10, 0, 1, 0.0F);
@@ -214,13 +104,34 @@ public class ModelCamelTFC extends ModelBase
         strapBellyLeft = new ModelRenderer(this, 0, 0);
         strapBellyLeft.setRotationPoint(4.01F, 8.1F, 6.7F);
         strapBellyLeft.addBox(0.0F, 0.0F, -0.5F, 0, 10, 1, 0.0F);
-        strapFrontLeft = new ModelRenderer(this, 0, 0);
-        strapFrontLeft.setRotationPoint(5.2F, 5.45F, -9.0F);
-        strapFrontLeft.addBox(0.0F, -0.5F, -0.5F, 0, 7, 1, 0.0F);
-        setRotation(strapFrontLeft, -0.5235987755982988F, 0.0F, 0.0F);
-        saddlePostBack = new ModelRenderer(this, 0, 0);
-        saddlePostBack.setRotationPoint(0.0F, 0.0F, 6.5F);
-        saddlePostBack.addBox(-0.5F, -2.5F, -0.5F, 1, 3, 1, 0.0F);
+
+        toesBackLeft = new ModelRenderer(this, 110, 64);
+        toesBackLeft.setRotationPoint(0.0F, 7.8F, 0.0F);
+        toesBackLeft.addBox(-1.5F, 0.0F, -2.0F, 3, 2, 3, 0.0F);
+        setRotation(toesBackLeft, 0.17453292012214658F, 0.0F, 0.0F);
+        toesFrontRight = new ModelRenderer(this, 110, 64);
+        toesFrontRight.setRotationPoint(0.0F, 8.0F, 0.0F);
+        toesFrontRight.addBox(-1.5F, 0.0F, -2.0F, 3, 2, 3, 0.0F);
+
+        tail = new ModelRenderer(this, 26, 0);
+        tail.setRotationPoint(-0.5F, 1.5F, 8.0F);
+        tail.addBox(-0.5F, 0.0F, -0.5F, 1, 12, 1, 0.0F);
+        setRotation(tail, 0.17976891295541594F, 0.0F, 0.0F);
+
+        mandible = new ModelRenderer(this, 49, 9);
+        mandible.setRotationPoint(0.0F, 2.0F, -2.2F);
+        mandible.addBox(-1.0F, 0.0F, -3.0F, 2, 1, 3, 0.0F);
+        setRotation(mandible, 0.17453292519943295F, 0.0F, 0.0F);
+
+        neckUpper = new ModelRenderer(this, 2, 33);
+        neckUpper.setRotationPoint(0.0F, 0.0F, -5.4F);
+        neckUpper.addBox(-1.5F, -12.0F, -3.0F, 3, 13, 4, 0.0F);
+        setRotation(neckUpper, 0.2617993950843811F, 0.0F, 0.0F);
+        earLeft = new ModelRenderer(this, 51, 5);
+        earLeft.setRotationPoint(1.6F, -3.0F, 1.0F);
+        earLeft.addBox(-1.0F, -1.0F, -0.5F, 2, 2, 1, 0.0F);
+        setRotation(earLeft, 0.0F, -0.3490658503988659F, 0.5235987755982988F);
+
         earRight = new ModelRenderer(this, 51, 5);
         earRight.mirror = true;
         earRight.setRotationPoint(-1.6F, -3.0F, 1.0F);
@@ -229,35 +140,99 @@ public class ModelCamelTFC extends ModelBase
         snout = new ModelRenderer(this, 46, 14);
         snout.setRotationPoint(0.0F, -2.5F, -3.0F);
         snout.addBox(-1.5F, 0.0F, -5.0F, 3, 3, 5, 0.0F);
-        backLegLeftTop = new ModelRenderer(this, 109, 46);
-        backLegLeftTop.setRotationPoint(4.2F, -2.5F, 10.0F);
-        backLegLeftTop.addBox(-1.5F, -2.0F, -2.0F, 3, 13, 4, 0.0F);
-        blanketEdgeRight = new ModelRenderer(this, 50, 85);
-        blanketEdgeRight.setRotationPoint(-4.5F, 3.5F, -2.0F);
-        blanketEdgeRight.addBox(-1.0F, 0.0F, -8.2F, 0, 18, 19, 0.0F);
-        humpTop = new ModelRenderer(this, 73, 17);
-        humpTop.setRotationPoint(0.0F, -9.8F, 0.0F);
-        humpTop.addBox(-1.5F, -2.0F, -3.5F, 3, 2, 7, 0.0F);
+
         toesFrontLeft = new ModelRenderer(this, 110, 64);
         toesFrontLeft.setRotationPoint(0.0F, 8.0F, 0.0F);
         toesFrontLeft.addBox(-1.5F, 0.0F, -2.0F, 3, 2, 3, 0.0F);
-        frontLegRightBottom = new ModelRenderer(this, 112, 3);
-        frontLegRightBottom.setRotationPoint(0.0F, 15.0F, 0.0F);
-        frontLegRightBottom.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, 0.0F);
-        bodyFront = new ModelRenderer(this, 1, 34);
-        bodyFront.setRotationPoint(-5.0F, 2.0F, -12.0F);
-        bodyFront.addBox(0.0F, -8.0F, 0.0F, 10, 13, 17, 0.0F);
+
         toesBackRight = new ModelRenderer(this, 110, 64);
-        toesBackRight.setRotationPoint(0.0F, 7.800000190734863F, 0.0F);
+        toesBackRight.setRotationPoint(0.0F, 7.8F, 0.0F);
         toesBackRight.addBox(-1.5F, 0.0F, -2.0F, 3, 2, 3, 0.0F);
         setRotation(toesBackRight, 0.17453292012214658F, 0.0F, 0.0F);
         neckBase = new ModelRenderer(this, 40, 34);
-        neckBase.setRotationPoint(0.0F, 0.0F, -12.0F);
+        neckBase.setRotationPoint(0.0F, 1.5F, -12.0F);
         neckBase.addBox(-2.5F, -3.5F, -8.0F, 5, 6, 9, 0.0F);
         setRotation(neckBase, -0.10471975803375246F, 0.0F, 0.0F);
         head = new ModelRenderer(this, 45, 23);
         head.setRotationPoint(0.0F, -12.0F, -0.3F);
         head.addBox(-2.0F, -3.0F, -3.0F, 4, 4, 5, 0.0F);
+
+        this.frontLegLeftTop = new ModelRenderer(this, 110, 38);
+        this.frontLegLeftTop.setRotationPoint(4.8F, -1.0F, -8.5F);
+        this.frontLegLeftTop.addBox(-1.5F, -1.0F, -1.5F, 3, 7, 3, 0.2F);
+        this.setRotation(frontLegLeftTop, 0.13962634015954636F, 0.0F, 0.0F);
+        this.backLegLeftTop = new ModelRenderer(this, 109, 49);
+        this.backLegLeftTop.setRotationPoint(4.5F, -2.5F, 10.0F);
+        this.backLegLeftTop.addBox(-1.5F, 0.0F, -2.0F, 3, 10, 4, 0.05F);
+        this.setRotation(backLegLeftTop, -0.10471975511965977F, 0.0F, 0.0F);
+        this.frontLegRightTop = new ModelRenderer(this, 110, 38);
+        this.frontLegRightTop.mirror = true;
+        this.frontLegRightTop.setRotationPoint(-4.8F, -1.0F, -8.5F);
+        this.frontLegRightTop.addBox(-1.5F, -1.0F, -1.5F, 3, 7, 3, 0.2F);
+        this.setRotation(frontLegRightTop, 0.13962634015954636F, 0.0F, 0.0F);
+        this.backLegRightTop = new ModelRenderer(this, 109, 49);
+        this.backLegRightTop.setRotationPoint(-4.5F, -2.5F, 10.0F);
+        this.backLegRightTop.addBox(-1.5F, 0.0F, -2.0F, 3, 10, 4, 0.05F);
+        this.setRotation(backLegRightTop, -0.10471975511965977F, 0.0F, 0.0F);
+        this.frontLegLeftMiddle = new ModelRenderer(this, 110, 13);
+        this.frontLegLeftMiddle.setRotationPoint(-1.5F, 5.5F, -1.3F);
+        this.frontLegLeftMiddle.addBox(0.0F, 0.0F, 0.0F, 3, 9, 3, 0.0F);
+        this.setRotation(frontLegLeftMiddle, -0.19198621771937624F, 0.0F, 0.0F);
+        this.frontLegRightMiddle = new ModelRenderer(this, 110, 13);
+        this.frontLegRightMiddle.mirror = true;
+        this.frontLegRightMiddle.setRotationPoint(-1.5F, 5.5F, -1.3F);
+        this.frontLegRightMiddle.addBox(0.0F, 0.0F, 0.0F, 3, 9, 3, 0.0F);
+        this.setRotation(frontLegRightMiddle, -0.19198621771937624F, 0.0F, 0.0F);
+        this.backLegLeftMiddle = new ModelRenderer(this, 110, 26);
+        this.backLegLeftMiddle.setRotationPoint(0.0F, 9.5F, -0.2F);
+        this.backLegLeftMiddle.addBox(-1.5F, 0.0F, -1.5F, 3, 8, 3, 0.0F);
+        this.setRotation(backLegLeftMiddle, 0.33161255787892263F, 0.0F, 0.0F);
+        this.backLegRightMiddle = new ModelRenderer(this, 110, 26);
+        this.backLegRightMiddle.setRotationPoint(0.0F, 9.5F, -0.2F);
+        this.backLegRightMiddle.addBox(-1.5F, 0.0F, -1.5F, 3, 8, 3, 0.0F);
+        this.setRotation(backLegRightMiddle, 0.33161255787892263F, 0.0F, 0.0F);
+        this.frontLegRightBottom = new ModelRenderer(this, 112, 1);
+        this.frontLegRightBottom.mirror = true;
+        this.frontLegRightBottom.setRotationPoint(1.5F, 8.5F, 1.5F);
+        this.frontLegRightBottom.addBox(-1.0F, 0.0F, -1.1F, 2, 9, 2, 0.0F);
+        this.setRotation(frontLegRightBottom, 0.05235987755982988F, 0.0F, 0.0F);
+        this.frontLegLeftBottom = new ModelRenderer(this, 112, 1);
+        this.frontLegLeftBottom.setRotationPoint(1.5F, 8.5F, 1.5F);
+        this.frontLegLeftBottom.addBox(-1.0F, 0.0F, -1.1F, 2, 9, 2, 0.0F);
+        this.setRotation(frontLegLeftBottom, 0.05235987755982988F, 0.0F, 0.0F);
+        this.backLegLeftBottom = new ModelRenderer(this, 112, 1);
+        this.backLegLeftBottom.setRotationPoint(0.0F, 7.5F, 0.0F);
+        this.backLegLeftBottom.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, 0.0F);
+        this.setRotation(backLegLeftBottom, -0.22689280275926282F, 0.0F, 0.0F);
+        this.backLegRightBottom = new ModelRenderer(this, 112, 1);
+        this.backLegRightBottom.setRotationPoint(0.0F, 7.5F, 0.0F);
+        this.backLegRightBottom.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, 0.0F);
+        this.setRotation(backLegRightBottom, -0.22689280275926282F, 0.0F, 0.0F);
+
+
+
+
+
+
+        chestRight = new ModelRenderer(this, 76, 0);
+        chestRight.mirror = true;
+        chestRight.setRotationPoint(-8.0F, -4.5F, 3.5F);
+        chestRight.addBox(-0.2F, 0.0F, -4.0F, 3, 8, 8, 0.0F);
+        setRotation(chestRight, 0.0F, 0.0F, -0.03490658503988659F);
+        chestLeft = new ModelRenderer(this, 76, 0);
+        chestLeft.setRotationPoint(5.0F, -4.5F, 3.5F);
+        chestLeft.addBox(0.3F, 0.0F, -4.0F, 3, 8, 8, 0.0F);
+        setRotation(chestLeft, 0.0F, 0.0F, 0.03490658503988659F);
+
+        saddle = new ModelRenderer(this, 65, 17);
+        saddle.setRotationPoint(0.0F, -10.0F, 0.0F);
+        saddle.addBox(-3.5F, 1.0F, -7.2F, 7, 3, 15, 0.0F);
+        saddlePostBack = new ModelRenderer(this, 0, 0);
+        saddlePostBack.setRotationPoint(0.0F, 0.0F, 6.5F);
+        saddlePostBack.addBox(-2.0F, -1.0F, -0.5F, 4, 2, 1, 0.0F);
+        saddlePostFront = new ModelRenderer(this, 0, 0);
+        saddlePostFront.setRotationPoint(0.0F, 0.0F, -6.0F);
+        saddlePostFront.addBox(-0.5F, -2.0F, -0.4F, 1, 3, 1, 0.0F);
 
         bridleFront1 = new ModelRenderer(this, 0, 0);
         bridleFront1.setRotationPoint(0.0F, 0.0F, -3.1F);
@@ -308,56 +283,66 @@ public class ModelCamelTFC extends ModelBase
         bridleFrontRight2.setRotationPoint(0.0F, -2.6F, -3.5F);
         bridleFrontRight2.addBox(-1.6F, 0.0F, -0.5F, 0, 3, 1, 0.0F);
 
-        saddle.addChild(strapFrontRightCurve);
+        bodyFront = new ModelRenderer(this, 1, 34);
+        bodyFront.setRotationPoint(-5.0F, 3.0F, -12.0F);
+        bodyFront.addBox(0.0F, -7.0F, 0.0F, 10, 13, 17, scale);
+        bodyBack = new ModelRenderer(this, 11, 13);
+        bodyBack.setRotationPoint(0.5F, -5.0F, 4.5F);
+        bodyBack.addBox(-4.5F, 1.05F, -0.5F, 8, 11, 9, scale);
+        humpMiddle = new ModelRenderer(this, 69, 36);
+        humpMiddle.setRotationPoint(0.0F, -6.0F, 1.0F);
+        humpMiddle.addBox(-2.5F, -1.95F, -6.0F, 5, 2, 11, scale);
+        humpBottom = new ModelRenderer(this, 59, 50);
+        humpBottom.setRotationPoint(0.0F, -5.0F, 0.0F);
+        humpBottom.addBox(-3.5F, -0.95F, -9.0F, 7, 2, 18, scale);
+
         saddle.addChild(strapBellyBottom);
         saddle.addChild(strapBellyRight);
         backLegLeftBottom.addChild(toesBackLeft);
         frontLegRightBottom.addChild(toesFrontRight);
-        blanketBase.addChild(blanketEdgeLeft);
-        saddle.addChild(strapFrontRight);
-        saddle.addChild(strapFrontLeftCurve);
         bodyBack.addChild(tail);
         backLegRightTop.addChild(backLegRightMiddle);
         snout.addChild(mandible);
         backLegLeftMiddle.addChild(backLegLeftBottom);
         saddle.addChild(saddlePostFront);
-        blanketBase.addChild(blanketTop);
         saddle.addChild(strapChestLeft);
         backLegLeftTop.addChild(backLegLeftMiddle);
         backLegRightMiddle.addChild(backLegRightBottom);
-        saddle.addChild(strapNeckBottom);
-        blanketBase.addChild(blanketMiddle);
         neckBase.addChild(neckUpper);
         head.addChild(earLeft);
-        frontLegLeftTop.addChild(frontLegLeftBottom);
+        //frontLegLeftTop.addChild(frontLegLeftBottom);
         saddle.addChild(strapChestBottom);
         saddle.addChild(strapChestRight);
         saddle.addChild(strapBellyLeft);
-        saddle.addChild(strapFrontLeft);
         saddle.addChild(saddlePostBack);
         head.addChild(earRight);
         head.addChild(snout);
-        blanketBase.addChild(blanketEdgeRight);
         frontLegLeftBottom.addChild(toesFrontLeft);
-        frontLegRightTop.addChild(frontLegRightBottom);
+        //frontLegRightTop.addChild(frontLegRightBottom);
         backLegRightBottom.addChild(toesBackRight);
         neckUpper.addChild(head);
-        this.head.addChild(this.bridleLeft2);
-        this.head.addChild(this.bridleFront2);
-        this.head.addChild(this.bridleBack2);
-        this.head.addChild(this.bridleFront1);
-        this.head.addChild(this.bridleFrontLeft1);
-        this.head.addChild(this.bridleBack1);
-        this.head.addChild(this.bridleRight1);
-        this.head.addChild(this.bridleFrontBottom2);
-        this.head.addChild(this.bridleRight2);
-        this.head.addChild(this.bridleFrontRight1);
-        this.head.addChild(this.bridleFrontBottom1);
-        this.head.addChild(this.bridleLeft1);
-        this.head.addChild(this.bridleFrontTop1);
-        this.head.addChild(this.bridleFrontTop2);
-        this.head.addChild(this.bridleFrontLeft2);
-        this.head.addChild(this.bridleFrontRight2);
+        head.addChild(this.bridleLeft2);
+        head.addChild(this.bridleFront2);
+        head.addChild(this.bridleBack2);
+        head.addChild(this.bridleFront1);
+        head.addChild(this.bridleFrontLeft1);
+        head.addChild(this.bridleBack1);
+        head.addChild(this.bridleRight1);
+        head.addChild(this.bridleFrontBottom2);
+        head.addChild(this.bridleRight2);
+        head.addChild(this.bridleFrontRight1);
+        head.addChild(this.bridleFrontBottom1);
+        head.addChild(this.bridleLeft1);
+        head.addChild(this.bridleFrontTop1);
+        head.addChild(this.bridleFrontTop2);
+        head.addChild(this.bridleFrontLeft2);
+        head.addChild(this.bridleFrontRight2);
+
+
+        frontLegLeftTop.addChild(this.frontLegLeftMiddle);
+        frontLegRightMiddle.addChild(this.frontLegRightBottom);
+        frontLegLeftMiddle.addChild(this.frontLegLeftBottom);
+        frontLegRightTop.addChild(this.frontLegRightMiddle);
     }
 
 
@@ -366,7 +351,9 @@ public class ModelCamelTFC extends ModelBase
     {
         AbstractChestHorse abstractchesthorse = (AbstractChestHorse) entityIn;
         boolean flag1 = !abstractchesthorse.isChild() && abstractchesthorse.hasChest();
+        boolean flag2 = !isChild && abstractchesthorse.isHorseSaddled();
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+
 
         if (((EntityAnimal) entityIn).isChild())
         {
@@ -390,7 +377,6 @@ public class ModelCamelTFC extends ModelBase
         bodyFront.render(scale);
         humpBottom.render(scale);
         humpMiddle.render(scale);
-        humpTop.render(scale);
 
         bridleFront1.isHidden = true;
         bridleFront2.isHidden = true;
@@ -404,60 +390,118 @@ public class ModelCamelTFC extends ModelBase
 
         if (flag1)
         {
-            this.blanketBase.render(scale);
-            this.chestLeft.render(scale);
-            this.chestRight.render(scale);
+            chestLeft.render(scale);
+            chestRight.render(scale);
+        }
+
+        if (flag2)
+        {
+            saddle.render(scale);
         }
 
     }
 
-    @Override
-    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity)
+    /*public void setRotationAngles(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
     {
 
-        this.head.rotateAngleX = par5 / (180F / (float) Math.PI);
-        this.head.rotateAngleY = par4 / (180F / (float) Math.PI);
-        this.frontLegRightTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
-        this.frontLegLeftTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
-        this.backLegLeftTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
-        this.backLegRightTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
+        //super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks);
+        this.head.rotateAngleX = headPitch / (180F / (float) Math.PI);
+        this.head.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
+        //this.frontLegRightTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
+        //this.frontLegLeftTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
+        //this.backLegLeftTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
+        //this.backLegRightTop.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
 
-        /*float f12 = 0.2617994F * f6;
+
+        float f9 = (float) entitylivingbaseIn.ticksExisted + ageInTicks;
+
+        float f10 = MathHelper.cos(limbSwing * 0.6662F + 3.1415927F);
+
         float f13 = MathHelper.cos(f9 * 0.6F + 3.1415927F);
-        this.frontLeftLeg.rotationPointY = -2.0F * f6 + 9.0F * f7;
-        this.frontLeftLeg.rotationPointZ = -2.0F * f6 + -8.0F * f7;
-        this.frontRightLeg.rotationPointY = this.frontLeftLeg.rotationPointY;
-        this.frontRightLeg.rotationPointZ = this.frontLeftLeg.rotationPointZ;
-        this.backLeftShin.rotationPointY = this.backLeftLeg.rotationPointY + MathHelper.sin(1.5707964F + f12 + f7 * -f10 * 0.5F * limbSwingAmount) * 7.0F;
-        this.backLeftShin.rotationPointZ = this.backLeftLeg.rotationPointZ + MathHelper.cos(-1.5707964F + f12 + f7 * -f10 * 0.5F * limbSwingAmount) * 7.0F;
-        this.backRightShin.rotationPointY = this.backRightLeg.rotationPointY + MathHelper.sin(1.5707964F + f12 + f7 * f10 * 0.5F * limbSwingAmount) * 7.0F;
-        this.backRightShin.rotationPointZ = this.backRightLeg.rotationPointZ + MathHelper.cos(-1.5707964F + f12 + f7 * f10 * 0.5F * limbSwingAmount) * 7.0F;
-        float f14 = (-1.0471976F + f13) * f6 + f11 * f7;
-        float f15 = (-1.0471976F - f13) * f6 + -f11 * f7;
-        this.frontLeftShin.rotationPointY = this.frontLeftLeg.rotationPointY + MathHelper.sin(1.5707964F + f14) * 7.0F;
-        this.frontLeftShin.rotationPointZ = this.frontLeftLeg.rotationPointZ + MathHelper.cos(-1.5707964F + f14) * 7.0F;
-        this.frontRightShin.rotationPointY = this.frontRightLeg.rotationPointY + MathHelper.sin(1.5707964F + f15) * 7.0F;
-        this.frontRightShin.rotationPointZ = this.frontRightLeg.rotationPointZ + MathHelper.cos(-1.5707964F + f15) * 7.0F;
-        this.backLeftLeg.rotateAngleX = f12 + -f10 * 0.5F * limbSwingAmount * f7;
-        this.backLeftShin.rotateAngleX = -0.08726646F * f6 + (-f10 * 0.5F * limbSwingAmount - Math.max(0.0F, f10 * 0.5F * limbSwingAmount)) * f7;
-        this.backLeftHoof.rotateAngleX = this.backLeftShin.rotateAngleX;
-        this.backRightLeg.rotateAngleX = f12 + f10 * 0.5F * limbSwingAmount * f7;
-        this.backRightShin.rotateAngleX = -0.08726646F * f6 + (f10 * 0.5F * limbSwingAmount - Math.max(0.0F, -f10 * 0.5F * limbSwingAmount)) * f7;
-        this.backRightHoof.rotateAngleX = this.backRightShin.rotateAngleX;
-        this.frontLeftLeg.rotateAngleX = f14;
-        this.frontLeftShin.rotateAngleX = (this.frontLeftLeg.rotateAngleX + 3.1415927F * Math.max(0.0F, 0.2F + f13 * 0.2F)) * f6 + (f11 + Math.max(0.0F, f10 * 0.5F * limbSwingAmount)) * f7;
-        this.frontLeftHoof.rotateAngleX = this.frontLeftShin.rotateAngleX;
-        this.frontRightLeg.rotateAngleX = f15;
-        this.frontRightShin.rotateAngleX = (this.frontRightLeg.rotateAngleX + 3.1415927F * Math.max(0.0F, 0.2F - f13 * 0.2F)) * f6 + (-f11 + Math.max(0.0F, -f10 * 0.5F * limbSwingAmount)) * f7;
-        this.frontRightHoof.rotateAngleX = this.frontRightShin.rotateAngleX;
-        this.backLeftHoof.rotationPointY = this.backLeftShin.rotationPointY;
-        this.backLeftHoof.rotationPointZ = this.backLeftShin.rotationPointZ;
-        this.backRightHoof.rotationPointY = this.backRightShin.rotationPointY;
-        this.backRightHoof.rotationPointZ = this.backRightShin.rotationPointZ;
-        this.frontLeftHoof.rotationPointY = this.frontLeftShin.rotationPointY;
-        this.frontLeftHoof.rotationPointZ = this.frontLeftShin.rotationPointZ;
-        this.frontRightHoof.rotationPointY = this.frontRightShin.rotationPointY;
-        this.frontRightHoof.rotationPointZ = this.frontRightShin.rotationPointZ;
+
+
+        this.frontLegLeftTop.rotationPointY = -2.0F + 9.0F;
+        this.frontLegLeftTop.rotationPointZ = -2.0F + -8.0F;
+        this.frontLegRightTop.rotationPointY = this.frontLegLeftTop.rotationPointY;
+        this.frontLegRightTop.rotationPointZ = this.frontLegLeftTop.rotationPointZ;
+        this.backLegLeftMiddle.rotationPointY = this.backLegLeftTop.rotationPointY + MathHelper.sin(limbSwing * 1.5707964F) * 0.5F * limbSwingAmount * 7.0F;
+        this.backLegLeftMiddle.rotationPointZ = this.backLegLeftTop.rotationPointZ + MathHelper.cos(limbSwing * -1.5707964F) * 0.5F * limbSwingAmount * 7.0F;
+        this.backLegRightMiddle.rotationPointY = this.backLegRightTop.rotationPointY + MathHelper.sin(1.5707964F   * f10 * 0.5F * limbSwingAmount) * 7.0F;
+        this.backLegRightMiddle.rotationPointZ = this.backLegRightTop.rotationPointZ + MathHelper.cos(-1.5707964F   * f10 * 0.5F * limbSwingAmount) * 7.0F;
+
+
+
+        float f14 = (-1.0471976F + f13) ;
+        float f15 = (-1.0471976F - f13) ;
+
+
+        this.frontLegLeftBottom.rotationPointY = this.frontLegLeftTop.rotationPointY + MathHelper.sin(1.5707964F + f14) * 7.0F;
+        this.frontLegLeftBottom.rotationPointZ = this.frontLegLeftTop.rotationPointZ + MathHelper.cos(-1.5707964F + f14) * 7.0F;
+        this.frontLegRightBottom.rotationPointY = this.frontLegRightTop.rotationPointY + MathHelper.sin(1.5707964F + f15) * 7.0F;
+        this.frontLegRightBottom.rotationPointZ = this.frontLegRightTop.rotationPointZ + MathHelper.cos(-1.5707964F + f15) * 7.0F;
+        this.backLegLeftTop.rotateAngleX = -f10 * 0.5F * limbSwingAmount;
+        this.backLegLeftMiddle.rotateAngleX = -0.08726646F  + (-f10 * 0.5F * limbSwingAmount - Math.max(0.0F, f10 * 0.5F * limbSwingAmount));
+        this.toesBackLeft.rotateAngleX = this.backLegLeftMiddle.rotateAngleX;
+        this.backLegRightMiddle.rotateAngleX = f10 * 0.5F * limbSwingAmount;
+        this.backLegRightMiddle.rotateAngleX = -0.08726646F  + (f10 * 0.5F * limbSwingAmount - Math.max(0.0F, -f10 * 0.5F * limbSwingAmount));
+        this.toesBackRight.rotateAngleX = this.backLegRightMiddle.rotateAngleX;
+        this.frontLegLeftTop.rotateAngleX = f14;
+        this.frontLegLeftBottom.rotateAngleX = (this.frontLegLeftTop.rotateAngleX + 3.1415927F * Math.max(0.0F, 0.2F + f13 * 0.2F))  + (Math.max(0.0F, f10 * 0.5F * limbSwingAmount));
+        this.toesFrontLeft.rotateAngleX = this.frontLegLeftBottom.rotateAngleX;
+        this.frontLegRightTop.rotateAngleX = f15;
+        this.frontLegRightBottom.rotateAngleX = (this.frontLegRightTop.rotateAngleX + 3.1415927F * Math.max(0.0F, 0.2F - f13 * 0.2F))  + (Math.max(0.0F, -f10 * 0.5F * limbSwingAmount));
+        this.toesFrontRight.rotateAngleX = this.frontLegRightBottom.rotateAngleX;
+        this.toesBackLeft.rotationPointY = this.backLegLeftMiddle.rotationPointY;
+        this.toesBackLeft.rotationPointZ = this.backLegLeftMiddle.rotationPointZ;
+        this.toesBackRight.rotationPointY = this.backLegRightMiddle.rotationPointY;
+        this.toesBackRight.rotationPointZ = this.backLegRightMiddle.rotationPointZ;
+        this.toesFrontLeft.rotationPointY = this.frontLegLeftBottom.rotationPointY;
+        this.toesFrontLeft.rotationPointZ = this.frontLegLeftBottom.rotationPointZ;
+        this.toesFrontRight.rotationPointY = this.frontLegRightBottom.rotationPointY;
+        this.toesFrontRight.rotationPointZ = this.frontLegRightBottom.rotationPointZ;
+
+    }*/
+
+    @Override
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
+    {
+        head.rotateAngleX = f4 / (180F / (float) Math.PI);
+        head.rotateAngleY = f3 / (180F / (float) Math.PI);
+
+        frontLegLeftTop.rotateAngleX = MathHelper.cos(f / 1.5F + 3F * (float) Math.PI / 2F) * 0.7F * f1 + 0F;
+        frontLegRightTop.rotateAngleX = MathHelper.cos(f / 1.5F + (float) Math.PI / 2F) * 0.7F * f1 + 0F;
+        backLegRightTop.rotateAngleX = MathHelper.cos(f / 1.5F + (float) Math.PI * 7F / 4F) * 0.7F * f1 - 0F;
+        backLegLeftTop.rotateAngleX = MathHelper.cos(f / 1.5F + 3f * (float) Math.PI / 4F) * 0.7F * f1 - 0F;
+        frontLegRightBottom.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI / 2F) * 1.4F * f1;
+        backLegRightMiddle.rotateAngleX = -MathHelper.sin(f / 1.5F + (float) Math.PI / 2F) * 0.7F * f1 - 0F;
+        toesFrontRight.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI / 2F) * 2.1F * f1 + 0F;
+        frontLegLeftBottom.rotateAngleX = MathHelper.sin(f / 1.5F + 3F * (float) Math.PI / 2F) * 1.4F * f1;
+        backLegLeftMiddle.rotateAngleX = -MathHelper.sin(f / 1.5F + 3F * (float) Math.PI / 2F) * 0.7F * f1 - 0F;
+        toesFrontLeft.rotateAngleX = MathHelper.sin(f / 1.5F + 3F * (float) Math.PI / 2F) * 2.1F * f1 + 0F;
+        backLegRightMiddle.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI * 7F / 4F) * 1.4F * f1 + 0F;
+        backLegRightBottom.rotateAngleX = -MathHelper.sin(f / 1.5F + (float) Math.PI * 7F / 4F) * 1.4F * f1 - 22F / 180F * (float) Math.PI;
+        toesBackRight.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI * 7F / 4F) * 2.1F * f1 + 0F;
+        backLegLeftMiddle.rotateAngleX = MathHelper.sin(f / 1.5F + 3f * (float) Math.PI / 4F) * 1.4F * f1 + 0F;
+        backLegLeftBottom.rotateAngleX = -MathHelper.sin(f / 1.5F + 3f * (float) Math.PI / 4F) * 1.4F * f1 - 22F / 180F * (float) Math.PI;
+        toesBackLeft.rotateAngleX = MathHelper.sin(f / 1.5F + 3f * (float) Math.PI / 4F) * 2.1F * f1 + 0F;
+
+        /*
+        frontLegLeftTop.rotateAngleX = MathHelper.cos(f / 1.5F + 3F * (float) Math.PI / 2F) * 0.7F * f1 + 0.3490659F;
+        frontLegRightTop.rotateAngleX = MathHelper.cos(f / 1.5F + (float) Math.PI / 2F) * 0.7F * f1 + 0.3490659F;
+        backLegRightTop.rotateAngleX = MathHelper.cos(f / 1.5F + (float) Math.PI * 7F / 4F) * 0.7F * f1 - 0.1745329F;
+        backLegLeftTop.rotateAngleX = MathHelper.cos(f / 1.5F + 3f * (float) Math.PI / 4F) * 0.7F * f1 - 0.1745329F;
+        frontLegRightBottom.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI / 2F) * 1.4F * f1;
+        backLegRightMiddle.rotateAngleX = -MathHelper.sin(f / 1.5F + (float) Math.PI / 2F) * 0.7F * f1 - 0.3490659F;
+        toesFrontRight.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI / 2F) * 2.1F * f1 + 1.134464F;
+        frontLegLeftBottom.rotateAngleX = MathHelper.sin(f / 1.5F + 3F * (float) Math.PI / 2F) * 1.4F * f1;
+        backLegLeftMiddle.rotateAngleX = -MathHelper.sin(f / 1.5F + 3F * (float) Math.PI / 2F) * 0.7F * f1 - 0.3490659F;
+        toesFrontLeft.rotateAngleX = MathHelper.sin(f / 1.5F + 3F * (float) Math.PI / 2F) * 2.1F * f1 + 1.134464F;
+        backLegRightMiddle.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI * 7F / 4F) * 1.4F * f1 + 0.5585054F;
+        backLegRightBottom.rotateAngleX = -MathHelper.sin(f / 1.5F + (float) Math.PI * 7F / 4F) * 1.4F * f1 - 22F / 180F * (float) Math.PI;
+        toesBackRight.rotateAngleX = MathHelper.sin(f / 1.5F + (float) Math.PI * 7F / 4F) * 2.1F * f1 + 1.134464F;
+        backLegLeftMiddle.rotateAngleX = MathHelper.sin(f / 1.5F + 3f * (float) Math.PI / 4F) * 1.4F * f1 + 0.5585054F;
+        backLegLeftBottom.rotateAngleX = -MathHelper.sin(f / 1.5F + 3f * (float) Math.PI / 4F) * 1.4F * f1 - 22F / 180F * (float) Math.PI;
+        toesBackLeft.rotateAngleX = MathHelper.sin(f / 1.5F + 3f * (float) Math.PI / 4F) * 2.1F * f1 + 1.134464F;
         */
     }
 
