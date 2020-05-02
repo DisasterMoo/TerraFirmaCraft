@@ -67,9 +67,3 @@ jobs:
           asset_path: ./build/libs/TerraFirmaCraft-MC1.12.2-${{ steps.get_version.outputs.result }}-deobf.jar
           asset_name: TerraFirmaCraft-MC1.12-${{ steps.get_version.outputs.result }}-deobf.jar
           asset_content_type: application/java-archive
-      - name: Curseforge
-        id: curseforge
-        run: ./gradlew curseforge
-        env:
-          VERSION: ${{ steps.get_version.outputs.result }}
-          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
